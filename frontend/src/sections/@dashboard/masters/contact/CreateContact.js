@@ -64,7 +64,8 @@ export default function CreateContact(props) {
   
   const [contactData, setContactData] = useState({
     contactName: "",
-        phone: null,
+    CStatus: null,
+        // phone: null,
         city: null,
         state: null,
         postalCode: null,
@@ -125,52 +126,52 @@ export default function CreateContact(props) {
   };
 
  
-  useEffect( ()=>{
-    const fetchAssetStatus = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/status`).then((response)=>{
-          // console.log(response.data);
-          setAssetStatus(response.data.results);
-        });
-      } catch (error) {
-        setAssetStatus([]);
-      }
-    }
-    const fetchLocations = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/locations`).then((response)=>{
-          // console.log(response.data);
-          setLocations(response.data.results);
-        });
-      } catch (error) {
-        setLocations([]);
-      }
-    }
-    const fetchSuppliers = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/suppliers`).then((response)=>{
-          // console.log(response.data);
-          setSuppliers(response.data.results);
-        });
-      } catch (error) {
-        setSuppliers([]);
-      }
-    }
-    const fetchCompanies = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/companies`).then((response)=>{
-          // console.log(response.data);
-          setCompanies(response.data.results);
-        });
-      } catch (error) {
-        setCompanies([]);
-      }
-    }
-    fetchAssetStatus();
-    fetchLocations();
-    fetchCompanies();
-    fetchSuppliers();
-  },[]);
+  // useEffect( ()=>{
+  //   const fetchAssetStatus = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/status`).then((response)=>{
+  //         // console.log(response.data);
+  //         setAssetStatus(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setAssetStatus([]);
+  //     }
+  //   }
+  //   const fetchLocations = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/locations`).then((response)=>{
+  //         // console.log(response.data);
+  //         setLocations(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setLocations([]);
+  //     }
+  //   }
+  //   const fetchSuppliers = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/suppliers`).then((response)=>{
+  //         // console.log(response.data);
+  //         setSuppliers(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setSuppliers([]);
+  //     }
+  //   }
+  //   const fetchCompanies = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/companies`).then((response)=>{
+  //         // console.log(response.data);
+  //         setCompanies(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setCompanies([]);
+  //     }
+  //   }
+  //   fetchAssetStatus();
+  //   fetchLocations();
+  //   fetchCompanies();
+  //   fetchSuppliers();
+  // },[]);
   const handleContactTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -193,8 +194,6 @@ export default function CreateContact(props) {
     setOpenAlert(!openAlert);
   };
  
-  
-
   const validate = () => {
     let errors = {};
 
@@ -206,10 +205,10 @@ export default function CreateContact(props) {
 
   const handleSubmit = async (event) => {
     // console.log('It worked');
-    if (!selectedFile) return;
+    // if (!selectedFile) return;
 
-  const formData = new FormData();
-  formData.append('file', selectedFile);
+  // const formData = new FormData();
+  // formData.append('file', selectedFile);
 
     const errors = validate();
     if (Object.keys(errors).length > 0) {
@@ -342,10 +341,10 @@ export default function CreateContact(props) {
                         // label="Series"
                         value={contactData.contactName}
                         onChange={(event) => {
-                          handleInputChange("accName", event.target.value);
+                          handleInputChange("contactName", event.target.value);
                         }}
-                        error={Boolean(validationErrors.accName)}
-                        helperText={validationErrors.accName}
+                        error={Boolean(validationErrors.contactName)}
+                        helperText={validationErrors.contactName}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -378,7 +377,6 @@ export default function CreateContact(props) {
                         id="lastname"
                         size="small"
                         fullWidth
-                        required
                         // label="Gender"
                         value={contactData.lastName}
                         onChange={(event) => {
@@ -416,17 +414,16 @@ export default function CreateContact(props) {
         }}>Status</FormLabel>
 
                       <TextField
-                        id="office_phone"
+                        id="cstatus"
                         size="small"
                         fullWidth
-                        required
                         // label="Job Title"
-                        value={contactData.phone}
+                        value={contactData.CStatus}
                         onChange={(event) => {
-                          handleInputChange("status", event.target.value);
+                          handleInputChange("CStatus", event.target.value);
                         }}
-                        error={Boolean(validationErrors.phone)}
-                        helperText={validationErrors.phone}
+                        error={Boolean(validationErrors.CStatus)}
+                        helperText={validationErrors.CStatus}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -463,7 +460,6 @@ export default function CreateContact(props) {
                         id="mobile"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.mobile}
                         onChange={(event) => {
@@ -507,7 +503,6 @@ export default function CreateContact(props) {
                         id="office phone"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.officePhone}
                         onChange={(event) => {
@@ -551,7 +546,7 @@ export default function CreateContact(props) {
                         id="department"
                         size="small"
                         fullWidth
-                        required
+                        
                         // label="Request Type"
                         value={contactData.department}
                         onChange={(event) => {
@@ -591,7 +586,6 @@ export default function CreateContact(props) {
                         id="desig"
                         size="small"
                         fullWidth
-                        required
                         // label="Status"
                         value={contactData.designation}
                         onChange={(event) => {
@@ -634,7 +628,6 @@ export default function CreateContact(props) {
                         id="jobtitle"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.jobTitle}
                         onChange={(event) => {
@@ -674,7 +667,6 @@ export default function CreateContact(props) {
                         id="reportsto"
                         size="small"
                         fullWidth
-                        required
                         // label="First Name"
                         value={contactData.reportsTo}
                         onChange={(event) => {
@@ -718,7 +710,6 @@ export default function CreateContact(props) {
                         id="lead"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.lead}
                         onChange={(event) => {
@@ -762,7 +753,6 @@ export default function CreateContact(props) {
                         id="leadsource"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.leadSource}
                         onChange={(event) => {
@@ -808,7 +798,6 @@ export default function CreateContact(props) {
                         id="city"
                         size="small"
                         fullWidth
-                        required
                         // label="Source"
                         value={contactData.city}
                         onChange={(event) => {
@@ -848,7 +837,6 @@ export default function CreateContact(props) {
                         id="state"
                         size="small"
                         fullWidth
-                        required
                         // label="Contact Type"
                         value={contactData.state}
                         onChange={(event) => {
@@ -889,7 +877,6 @@ export default function CreateContact(props) {
                         id="postalcode"
                         size="small"
                         fullWidth
-                        required
                         // label="Middle Name"
                         value={contactData.postalCode}
                         onChange={(event) => {
@@ -933,7 +920,6 @@ export default function CreateContact(props) {
                         id="country"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.country}
                         onChange={(event) => {
@@ -976,9 +962,7 @@ export default function CreateContact(props) {
                       <TextField
                         id="fax"
                         size="small"
-                        fullWidth
-                        required
-                        // label="Request Type"
+                        fullWidth                       // label="Request Type"
                         value={contactData.fax}
                         onChange={(event) => {
                           handleInputChange("fax", event.target.value);
@@ -1021,7 +1005,6 @@ export default function CreateContact(props) {
                         id="Address"
                         size="small"
                         fullWidth
-                        required
                         // label="Request Type"
                         value={contactData.address}
                         onChange={(event) => {
@@ -1066,7 +1049,6 @@ export default function CreateContact(props) {
     multiline  // Add this to enable multiline input
     rows={4}   // Adjust the number of rows as needed
     fullWidth
-    required
     value={contactData.description}
     onChange={(event) => {
       handleInputChange("description", event.target.value);

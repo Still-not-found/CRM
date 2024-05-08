@@ -19,12 +19,12 @@ const contact={
       },
 
     getAllContactsWithMappedData: async ()=>{
-        const [rows, fields] = await db.query(`SELECT id, middle_name, salutation, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to, modified_by, created_by FROM contacts ;`);
+        const [rows, fields] = await db.query(`SELECT id, c_status, middle_name, salutation, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to, modified_by, created_by FROM contacts ;`);
         return rows;
     },
 
     getContactByContactIdWithMappedData: async (id) => {
-        const [rows, fields] = await db.query(`SELECT id, middle_name, salutation, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to, modified_by, created_by  FROM contacts WHERE contact_id = ?` , [id]);
+        const [rows, fields] = await db.query(`SELECT id, c_status, middle_name, salutation, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to, modified_by, created_by  FROM contacts WHERE contact_id = ?` , [id]);
         return rows;
     },
 

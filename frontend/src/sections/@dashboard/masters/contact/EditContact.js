@@ -14,6 +14,8 @@ import {
   Button,
   Divider,
   Grid,
+  FormLabel,
+  Container,
   TextField,
   Typography,
   styled,
@@ -64,56 +66,43 @@ export default function EditContact(props) {
   const [tabValue, setTabValue] = useState("1");
   const [contactData, setContactData] = useState({
     contactName: "",
-    assettag: "",
-    serial: "",
-    // assignedto: "",
-    hostname: "",
-    osname: "",
-    purchasedate: null,
-    osversion: "",
-    osmanufacturer: "",
-    osbuildtype: "",
-    osconfiguration: "",
-    registeredowner: "",
-    productid: "",
-    originalinstalldate: "",
-    systemmanufacturer: "",
-    systemmodel: "",
-    processor: "",
-    domain: "",
-    systemtype: "",
-    biosversion: "",
-    windowsdirectory: "",
-    systemdirectory: "",
-    systemlocale: "",
-    timezone: "",
-    totalphysicalram: "",
-    virtualrammax: "",
-    virtualramavailable: "",
-    installedsoftware: "",
-    ordernumber: null,
-    purchasecost: null,
-    billedentity: null,
-    assignedentity: null,
-    supplier: null,
-    location: null,
-    warrenty: null,
-    invoice: null,
-    po: null,
+    account: null, 
+    middelName: null, 
+    designation: null, 
+    gender: null, 
+    salutation: null, 
+    companyName: null, 
+    lead: null, 
+    lastName: null, 
+    leadSource: null, 
+    reportsTo: null, 
+    description: null, 
+    fax: null, 
+    mobile: null, 
+    department: null, 
+    jobTitle: null, 
+    email: null, 
+    address: null, 
+    city: null, 
+    state: null, 
+    postalCode: null, 
+    country: null, 
+    officePhone: null, 
+    // modifiedBy, createdBy
   });
 
-  const softwareDetailsArray = contactData.installedsoftware.split('", "');
+  // const softwareDetailsArray = contactData.installedsoftware.split('", "');
 
   // Function to chunk the array into subarrays of length 4
-  const chunkArray = (array, chunkSize) => {
-    const result = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-      const chunk = array.slice(i, i + chunkSize);
-      result.push(chunk);
-    }
-    return result;
-  };
-  const softwareChunks = chunkArray(softwareDetailsArray, 4);
+  // const chunkArray = (array, chunkSize) => {
+  //   const result = [];
+  //   for (let i = 0; i < array.length; i += chunkSize) {
+  //     const chunk = array.slice(i, i + chunkSize);
+  //     result.push(chunk);
+  //   }
+  //   return result;
+  // };
+  // const softwareChunks = chunkArray(softwareDetailsArray, 4);
 
   const handleContactTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -228,50 +217,31 @@ export default function EditContact(props) {
       try {
         await axios.get(`${API_URL}/api/contacts/${idToEdit}`).then((response) => {
           if (response.data.status) {
-            const { name, asset_tag, invoice, po, warrenty, order_number, purchase_cost, serial, purchase_date, host_name, os_name, os_version, os_manufacturer, os_build_type, os_configuration, registered_owner, product_id, original_install_date, system_manufacturer, system_model, processor, domain, sophos, sapphire, system_type, bios_version, windows_directory, system_directory, system_locale, time_zone, total_physical_ram, virtual_ram_max, virtual_ram_available, installed_software, billed_entity, assigned_entity, supplier_id, location_id, status_id, } = response.data.results[0];
+            const { middle_name, salutation, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to } = response.data.results[0];
             setContactData({
-              contactName: name,
-              assettag: asset_tag,
-              serial: serial,
-              // assigned_to: assignedto,
-              hostname: host_name,
-              osname: os_name,
-              purchasedate: dayjs(purchase_date),
-              osversion: os_version,
-              osmanufacturer: os_manufacturer,
-              osbuildtype: os_build_type,
-              osconfiguration: os_configuration,
-              registeredowner: registered_owner,
-              productid: product_id,
-              // originalinstalldate: dayjs(original_install_date),
-              systemmanufacturer: system_manufacturer,
-              systemmodel: system_model,
-              processor: processor,
-              domain: domain,
-              sophos: sophos,
-              sapphire: sapphire,
-              systemtype: system_type,
-              biosversion: bios_version,
-              windowsdirectory: windows_directory,
-              systemdirectory: system_directory,
-              systemlocale: system_locale,
-              timezone: time_zone,
-              totalphysicalram: total_physical_ram,
-              virtualrammax: virtual_ram_max,
-              virtualramavailable: virtual_ram_available,
-              installedsoftware: installed_software,
-              billedentity: billed_entity,
-              assignedentity: assigned_entity,
-              supplier: supplier_id,
-              location: location_id,
-              assetStatus: status_id,
-              ordernumber: order_number,
-              purchasecost: purchase_cost,
-              warrenty: dayjs(warrenty),
-              invoice: invoice,
-              po:po,
-              // zoneId: zone.id,
-              // countryId: country.country_id,
+              contactName: first_name,
+              account: account_id, 
+              middelName: middle_name, 
+              designation: designation, 
+              gender: gender, 
+              salutation: salutation, 
+              companyName: company_name, 
+              lead: lead_id, 
+              lastName: last_name, 
+              leadSource: lead_source, 
+              reportsTo: reports_to, 
+              description: description, 
+              fax: fax, 
+              mobile: mobile, 
+              department: department, 
+              jobTitle: job_title, 
+              email: email, 
+              address: address, 
+              city: city, 
+              state: state, 
+              postalCode: postal_code, 
+              country: country, 
+              officePhone: office_phone, 
             });
           }
         }).catch((error) => {
@@ -332,7 +302,7 @@ export default function EditContact(props) {
       return;
     }
     try {
-      await axios.put(`${API_URL}/api/contacts/${idToEdit}`, { ...contactData, purchasedate: dayjs(contactData.purchasedate).format("YYYY-MM-DD"),warrenty: dayjs(contactData.warrenty).format("YYYY-MM-DD"), updatedBy: loggedUser.user_id }).then((response) => {
+      await axios.put(`${API_URL}/api/contacts/${idToEdit}`, { ...contactData, modifiedBy: loggedUser.id }).then((response) => {
         console.log(response);
         setStatus({
           open: true,
@@ -361,893 +331,861 @@ export default function EditContact(props) {
   return (
     <>
       <Helmet>
-        <title>Contact Edit | IT Asset Management</title>
+        <title>Contact Edit | CRM Sales</title>
       </Helmet>
 
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="xl"
         open={optionState.canEdit}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Edit Contact"}</DialogTitle>
         <TabContext value={tabValue}>
           <TabList
             onChange={handleContactTabChange}
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="Asset Hardware Details" value="1" />
-            <Tab label="Asset Software Details" value="2" />
-            <Tab label="Order Related Info" value="3" />
-          </TabList>
-          <Divider sx={{ borderStyle: "dashed" }} />
-          <TabPanel value="1">
+            <Tab label="New Contact" value="1" sx={{ fontSize: '18.92px', }}  />
 
-            <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={{ xs: 1, md: 3 }}
-                    columns={{ xs: 12, md: 7 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-
-                      <TextField
-                        id="contact_name"
-                        size="small"
-                        fullWidth
-                        disabled
-                        required
-                        label="Contact Name"
-                        value={contactData.contactName}
-                        onChange={(event) => {
-                          handleInputChange("contactName", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.contactName)}
-                        helperText={validationErrors.contactName}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="serial"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="Serial"
-                        value={contactData.serial}
-                        onChange={(event) => {
-                          handleInputChange("serial", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.serial)}
-                        helperText={validationErrors.serial}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="host_name"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="Host Name"
-                        value={contactData.hostname}
-                        onChange={(event) => {
-                          handleInputChange("hostname", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.hostname)}
-                        helperText={validationErrors.hostname}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="os_name"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="OS Name"
-                        value={contactData.osname}
-                        onChange={(event) => {
-                          handleInputChange("osname", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.osname)}
-                        helperText={validationErrors.osname}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="os_version"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="OS Version"
-                        value={contactData.osversion}
-                        onChange={(event) => {
-                          handleInputChange("osversion", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.osversion)}
-                        helperText={validationErrors.osversion}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="os_manufacturer"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="OS Manufacturer"
-                        value={contactData.osmanufacturer}
-                        onChange={(event) => {
-                          handleInputChange("osmanufacturer", event.target.value);
-                        }}
-
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="os_build_type"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="OS Build Type"
-                        value={contactData.osbuildtype}
-                        onChange={(event) => {
-                          handleInputChange("osbuildtype", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.osbuildtype)}
-                        helperText={validationErrors.osbuildtype}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="registered_owner"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="Registered Owner"
-                        value={contactData.registeredowner}
-                        onChange={(event) => {
-                          handleInputChange("registeredowner", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.registeredowner)}
-                        helperText={validationErrors.registeredowner}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="productid"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="Product ID"
-                        value={contactData.productid}
-                        onChange={(event) => {
-                          handleInputChange("productid", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.productid)}
-                        helperText={validationErrors.productid}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="systemmanufacturer"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="System Manufacturer"
-                        value={contactData.systemmanufacturer}
-                        onChange={(event) => {
-                          handleInputChange("systemmanufacturer", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.systemmanufacturer)}
-                        helperText={validationErrors.systemmanufacturer}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="systemmodel"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="System Model"
-                        value={contactData.systemmodel}
-                        onChange={(event) => {
-                          handleInputChange("systemmodel", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.systemmodel)}
-                        helperText={validationErrors.systemmodel}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="processor"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="Processor"
-                        value={contactData.processor}
-                        onChange={(event) => {
-                          handleInputChange("processor", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.processor)}
-                        helperText={validationErrors.processor}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="domain"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="Domain"
-                        value={contactData.domain}
-                        onChange={(event) => {
-                          handleInputChange("domain", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.domain)}
-                        helperText={validationErrors.domain}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="biosversion"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="BIOS"
-                        value={contactData.biosversion}
-                        onChange={(event) => {
-                          handleInputChange("biosversion", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.biosversion)}
-                        helperText={validationErrors.biosversion}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="windowsdirectory"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="WindowsDirectory"
-                        value={contactData.windowsdirectory}
-                        onChange={(event) => {
-                          handleInputChange("windowsdirectory", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.windowsdirectory)}
-                        helperText={validationErrors.windowsdirectory}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="systemdirectory"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="SystemDirectory"
-                        value={contactData.systemdirectory}
-                        onChange={(event) => {
-                          handleInputChange("systemdirectory", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.systemdirectory)}
-                        helperText={validationErrors.systemdirectory}
-                      />
-                    </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="systemlocale"
-                        size="small"
-                        fullWidth
-                        required
-                        disabled
-                        label="SystemLocale"
-                        value={contactData.systemlocale}
-                        onChange={(event) => {
-                          handleInputChange("systemlocale", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.systemlocale)}
-                        helperText={validationErrors.systemlocale}
-                      />
-                    </Grid>
-
-                  </Grid>
-                </Grid>
-
-              </Grid>
-            </Box>
-          </TabPanel>
-
-          <TabPanel value="2">
-            <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={{ xs: 1, md: 3 }}
-                    columns={{ xs: 12, md: 7 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                      <Typography variant="body1" disabled="true">
-                        {contactData.installedsoftware.split(',').map((item, index) => (
-                          <div key={index}>
-                            {`${index + 1} - ${item.trim()}`} {/* Trimming to remove any leading or trailing spaces */}
-                          </div>
-                        ))}
-                      </Typography>
-                    </Grid>
-                    
-                  </Grid>
-                </Grid>
-
-              </Grid>
-            </Box>
-          </TabPanel>
-
-          {/* <TabPanel value="2"> */}
-          {/* <Box flexGrow={1}>
-      <Grid container columnSpacing={3}>
-        <Grid item xs={12}>
-          <Grid container spacing={{ xs: 1, md: 3 }} columns={{ xs: 12, md: 7 }}>
-            <Grid item xs={12}>
-              {softwareChunks.map((chunk, index) => (
-                <React.Fragment key={index}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
-                    {chunk.map((item, idx) => (
-                      <span key={idx}>{item.replace(/^"|"$/g, '')}</span>
-                    ))}
-                  </div>
-                  {index < softwareChunks.length - 1 && <hr style={{ width: '100%', borderColor: '#e0e0e0', borderWidth: '0.5px' }} />}
-                </React.Fragment>
-              ))}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Box> */}
-          {/* <Box flexGrow={1}>
-      <Grid container columnSpacing={3}>
-        <Grid item xs={4} sm={12} md={12}>
-          <Grid
-            container
-            spacing={{ xs: 1, md: 3 }}
-            columns={{ xs: 12, md: 7 }}
-          >
-            <Grid item xs={4} sm={12} md={12}>
-              {contactData.installedsoftware.split(',').map((item, index, array) => (
-                <React.Fragment key={index}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span>{`${index + 1} - ${item.trim()}`}</span>
-                  </div>
-                  {index < array.length - 1 && ( // Don't add a line after the last item
-                    <hr style={{ width: '100%', borderColor: '#e0e0e0', borderWidth: '0.5px' }} />
-                  )}
-                </React.Fragment>
-              ))}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Box> */}
-           {/* <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={{ xs: 1, md: 3 }}
-                    columns={{ xs: 12, md: 7 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                      <Typography variant="body1" disabled="true">
-                        {contactData.installedsoftware.split(',').map((item, index) => (
-                          <div key={index}>
-                            {`${index + 1} - ${item.trim()}`} 
-                          </div>
-                        ))}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-              </Grid>
-            </Box>  */}
-          {/* </TabPanel> */}
-          <TabPanel value="3">
-            <Box flexGrow={1}>
-              <Grid container spacing={3}>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider
-                    id="purchasedate"
-                    dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Purchase Date"
-                      format="DD/MM/YYYY"
-                      value={contactData.purchasedate}
-                      onChange={(newValue)=>
-                      handleInputChange("purchasedate", dayjs(newValue).format( "YYYY-MM-DD"))
-                    }
-                      
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-                
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider
-                    id="EOL"
-                    dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Warrenty EOL"
-                      format="DD/MM/YYYY"
-                      value={contactData.warrenty}
-                      onChange={(newValue)=>
-                      handleInputChange("warrenty", dayjs(newValue).format( "YYYY-MM-DD"))
-                    }
-                      
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="purchasecost"
-                    size="small"
-                    fullWidth
-                    required
-                    label="Purchase Cost"
-                    value={contactData.purchasecost}
-                    onChange={(event) => {
-                      handleInputChange("purchasecost", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.purchasecost)}
-                    helperText={validationErrors.purchasecost}
-                  />
-
-                </Grid>
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="ordernumber"
-                    size="small"
-                    fullWidth
-                    required
-                    label="Order Number"
-                    value={contactData.ordernumber}
-                    onChange={(event) => {
-                      handleInputChange("ordernumber", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.ordernumber)}
-                    helperText={validationErrors.ordernumber}
-                  />
-
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                            <Autocomplete
-                            // fullWidth
-                            size="small"
-                              value={
-                                companies.find(
-                                  (_company) =>
-                                    _company.company_id === contactData.billedentity
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("billedentity", newValue.company_id);
-                                } else {
-                                  handleInputChange("billedentity", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.company_code}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              // id="billedentity"
-                              options={companies}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  required
-                                  label="Billed Entity"
-                                  // error={Boolean(
-                                  //   validationErrors["departure" + index]
-                                  // )}
-                                  // helperText={validationErrors["departure" + index]}
-                                />
-                              )}
-                            />
-                          </Grid>
-                          {/* <Grid item xs={2} md={0.5}>
-                            <Tooltip title="New Company">
-                              <Button
-                                to={"/app/masters/Companies_master/CreateCompany"}
-                                variant="contained"
-                                color="info"
-                                component={RouterLink}
-                              >
-                                <AddIcon />
-                              </Button>
-                            </Tooltip>
-                          </Grid> */}
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                            <Autocomplete
-                              value={
-                                companies.find(
-                                  (_company) =>
-                                    _company.company_id === contactData.assignedentity
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("assignedentity", newValue.company_id);
-                                } else {
-                                  handleInputChange("assignedentity", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.company_code}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={companies}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  {...params}
-                                  label="Assigned Entity"
-                                  // error={Boolean(
-                                  //   validationErrors["departure" + index]
-                                  // )}
-                                  // helperText={validationErrors["departure" + index]}
-                                />
-                              )}
-                            />
-                          </Grid>
-                          {/* <Grid item xs={2} md={0.5}>
-                            <Tooltip title="New Company">
-                              <Button
-                                to={"/app/masters/Companies_master/CreateCompany"}
-                                variant="contained"
-                                color="info"
-                                component={RouterLink}
-                              >
-                                <AddIcon />
-                              </Button>
-                            </Tooltip>
-                          </Grid> */}
-                        </Grid>
-                      </Grid>
-
-                      <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                            <Autocomplete
-                              value={
-                                suppliers.find(
-                                  (_supplier) =>
-                                    _supplier.supplier_id === contactData.supplier
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("supplier", newValue.supplier_id);
-                                } else {
-                                  handleInputChange("supplier", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.name}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={suppliers}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  {...params}
-                                  label="Supplier"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          {/* <Grid item xs={2} md={0.5}>
-                            <Tooltip title="New Supplier">
-                              <Button
-                                to={"/app/asset_management/supplier"}
-                                variant="contained"
-                                color="info"
-                                component={RouterLink}
-                              >
-                                <AddIcon />
-                              </Button>
-                            </Tooltip>
-                          </Grid> */}
-                        </Grid>
-                      </Grid>
-
-                      <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                            <Autocomplete
-                              value={
-                                locations.find(
-                                  (_location) =>
-                                    _location.location_id === contactData.location
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("location", newValue.location_id);
-                                } else {
-                                  handleInputChange("location", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.name}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={locations}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  {...params}
-                                  label="Location"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          {/* <Grid item xs={2} md={0.5}>
-                            <Tooltip title="New Location">
-                              <Button
-                                to={"/app/asset_management/location"}
-                                variant="contained"
-                                color="info"
-                                component={RouterLink}
-                              >
-                                <AddIcon />
-                              </Button>
-                            </Tooltip>
-                          </Grid> */}
-                        </Grid>
-                      </Grid>
-
-                      <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                            <Autocomplete
-                              value={
-                                assetstatus.find(
-                                  (_assetStatus) =>
-                                    _assetStatus.status_id === contactData.assetStatus
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("assetStatus", newValue.status_id);
-                                } else {
-                                  handleInputChange("assetStatus", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.status_name}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={assetstatus}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  {...params}
-                                  label="Status"
-                                />
-                              )}
-                            />
-                          </Grid>
-
-                          {/* <Grid item xs={12} sm={10} md={12}>
-                        <Grid
-                          container
-                          spacing={1}
-                          columns={{ xs: 12, md: 3.5 }}
-                        ></Grid>
-            <Grid item xs={4} sm={12} md={12}>
-                <input
-                    accept=".pdf,.docx"
-                    id="file-upload"
-                    type="file"
-                    multiple
-                    style={{ display: 'none' }}
-                    onChange={handleFileUpload}
-                />
-                <label htmlFor="file-upload">
-                    <Button
-                        variant="contained"
-                        component="span"
-                        fullWidth
-                    >
-                        Upload Invoice
-                    </Button>
-                </label>
-            </Grid>
-            <Grid item xs={12}>
-                {uploadedFiles.map((file, index) => (
-                    <div key={index}>{file.name}</div>
-                ))}
-            </Grid>
-        </Grid> */}
-                          
-                        </Grid>
-                      </Grid>
-
-                      {/* <Grid item xs={4} sm={12} md={12}>
-
-                      <TextField
-                        id="contact_name"
-                        size="small"
-                        fullWidth
-                        disabled
-                        required
-                        label="Uploaded Invoice/PO"
-                        value= 
-                        {contactData.invoice}
-                        InputProps={{
-
-                          endAdornment: (
-                          
-                          <Link to='(`${API_URL}/uploads/${invoice}`)'>view</Link>
-                          
-                          ),
-                          
-                          }}
-                        // onClick={()=>{navigate(`${API_URL}/uploads/${invoice}`)}}
-                      />
-                    </Grid> */}
-                    <Grid item xs={4} sm={12} md={12}>
-      <TextField
-        id="contact_name"
-        size="small"
-        fullWidth
-        disabled
-        label="Uploaded Invoice/PO"
-        value={contactData.invoice}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={()=>{window.open(`${API_URL}/uploads/${contactData.invoice}`, '_blank')}}
-                edge="end"
-              >
-                <VisibilityIcon /> {/* Icon to view/download the invoice */}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-    </Grid>
-
-    <Grid item xs={12} sm={10} md={12}>
-                        <Grid
-                          container
-                          spacing={1}
-                          columns={{ xs: 12, md: 3.5 }}
-                        ></Grid>
-            <Grid item xs={4} sm={12} md={12}>
-                <input
-                    accept=".pdf,.docx"
-                    id="file-upload"
-                    type="file"
-                    style={{ display: 'none' }}
-                    // value={contactData.invoice}
-                    onChange={handleFileChange}
-                />
-                <label htmlFor="file-upload">
-                    <Button
-                        variant="contained"
-                        component="span"
-                        fullWidth
-                    >
-                        Upload Invoice
-                    </Button>
-                </label>
-            </Grid>
-            {selectedFile && <Grid item xs={12}>
-                    <div>{selectedFile.name}</div>
-                    <div>
-          <p>Uploaded File:{selectedFile.name}</p>
-        </div>
-            </Grid>}
-           
-        </Grid>
-
-              </Grid>
-
-            </Box>
-
-          </TabPanel>
-          <Divider sx={{ borderStyle: "dashed" }} />
-          <Box flexGrow={1} p={2}>
+            <Box flexGrow={1} >
             <DialogActions>
-              <SubmitButton color="success" variant="contained" onClick={handleSubmit} >
+              <SubmitButton  variant="contained" color="primary" onClick={handleSubmit} >
                 Save
               </SubmitButton>
-              <Button variant="contained" color="error" onClick={handleClose}>
+              <Button variant="contained" color="primary" onClick={handleClose}>
                 Close
               </Button>
             </DialogActions>
 
           </Box>
-        </TabContext>
+           
+          </TabList>
+          
+          <Divider sx={{ borderStyle: "fill" }} />
+          <TabPanel value="1">
+          <Container maxWidth="l">
+            <Box flexGrow={2}>
+              <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={6}>
+                <Typography variant="h5">Overview</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                </Grid>
 
+                <Grid item xs={12} sm={4} md={1}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>salutation</FormLabel>
+
+                      <TextField
+                        id="salutation"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Salutation"
+                        value={contactData.salutation}
+                        onChange={(event) => {
+                          handleInputChange("salutation", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.salutation)}
+                        helperText={validationErrors.salutation}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={2.5}>
+                    <FormLabel component="legend" sx={{ color: '#525252',}}>First Name</FormLabel>
+                      <TextField
+                        id="fn"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Series"
+                        value={contactData.contactName}
+                        onChange={(event) => {
+                          handleInputChange("accName", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.accName)}
+                        helperText={validationErrors.accName}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={2.5}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Last Name</FormLabel>
+
+                      <TextField
+                        id="lastname"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Gender"
+                        value={contactData.lastName}
+                        onChange={(event) => {
+                          handleInputChange("lastName", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.lastName)}
+                        helperText={validationErrors.lastName}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Status</FormLabel>
+
+                      <TextField
+                        id="office_phone"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Job Title"
+                        value={contactData.officePhone}
+                        onChange={(event) => {
+                          handleInputChange("officePhone", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.officePhone)}
+                        helperText={validationErrors.officePhone}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Mobile
+      </FormLabel>
+                      <TextField
+                        id="mobile"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.mobile}
+                        onChange={(event) => {
+                          handleInputChange("mobile", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.mobile)}
+                        helperText={validationErrors.mobile}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Office Phone
+      </FormLabel>
+                      <TextField
+                        id="office phone"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.officePhone}
+                        onChange={(event) => {
+                          handleInputChange("officePhone", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.officePhone)}
+                        helperText={validationErrors.officePhone}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Department
+      </FormLabel>
+                      <TextField
+                        id="department"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.department}
+                        onChange={(event) => {
+                          handleInputChange("department", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.department)}
+                        helperText={validationErrors.department}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Designation</FormLabel>
+
+                      <TextField
+                        id="desig"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={contactData.designation}
+                        onChange={(event) => {
+                          handleInputChange("designation", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.designation)}
+                        helperText={validationErrors.designation}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Job Title
+      </FormLabel>
+                      <TextField
+                        id="jobtitle"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.jobTitle}
+                        onChange={(event) => {
+                          handleInputChange("jobTitle", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.jobTitle)}
+                        helperText={validationErrors.jobTitle}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Reports To</FormLabel>
+
+                      <TextField
+                        id="reportsto"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="First Name"
+                        value={contactData.reportsTo}
+                        onChange={(event) => {
+                          handleInputChange("reportsTo", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.reportsTo)}
+                        helperText={validationErrors.reportsTo}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        lead
+      </FormLabel>
+                      <TextField
+                        id="lead"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.lead}
+                        onChange={(event) => {
+                          handleInputChange("lead", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.lead)}
+                        helperText={validationErrors.lead}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        LeadSource
+      </FormLabel>
+                      <TextField
+                        id="leadsource"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.leadSource}
+                        onChange={(event) => {
+                          handleInputChange("leadSource", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.leadSource)}
+                        helperText={validationErrors.leadSource}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                      <Typography variant="h5">Address & Detail</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}></Grid>
+
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>City</FormLabel>
+
+                      <TextField
+                        id="city"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Source"
+                        value={contactData.city}
+                        onChange={(event) => {
+                          handleInputChange("city", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.city)}
+                        helperText={validationErrors.city}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>State/Region</FormLabel>
+
+                      <TextField
+                        id="state"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Contact Type"
+                        value={contactData.state}
+                        onChange={(event) => {
+                          handleInputChange("state", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.state)}
+                        helperText={validationErrors.state}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Postal Code</FormLabel>
+
+                      <TextField
+                        id="postalcode"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Middle Name"
+                        value={contactData.postalCode}
+                        onChange={(event) => {
+                          handleInputChange("postalCode", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.postalCode)}
+                        helperText={validationErrors.postalCode}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Country
+      </FormLabel>
+                      <TextField
+                        id="country"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.country}
+                        onChange={(event) => {
+                          handleInputChange("country", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.country)}
+                        helperText={validationErrors.country}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                 
+                  <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        fax
+      </FormLabel>
+                      <TextField
+                        id="fax"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.fax}
+                        onChange={(event) => {
+                          handleInputChange("fax", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.fax)}
+                        helperText={validationErrors.fax}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Address
+      </FormLabel>
+                      <TextField
+                        id="Address"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Request Type"
+                        value={contactData.address}
+                        onChange={(event) => {
+                          handleInputChange("address", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.address)}
+                        helperText={validationErrors.address}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={12} md={12}>
+  <FormLabel 
+    component="legend" 
+    sx={{ 
+      color: '#525252', // Set the color of the label here
+      // Add more styling as needed
+    }}
+  >
+    Description
+  </FormLabel>
+  <TextField
+    id="description"
+    multiline  // Add this to enable multiline input
+    rows={4}   // Adjust the number of rows as needed
+    fullWidth
+    required
+    value={contactData.description}
+    onChange={(event) => {
+      handleInputChange("description", event.target.value);
+    }}
+    error={Boolean(validationErrors.description)}
+    helperText={validationErrors.description}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    // Apply styles to the input field itself
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+</Grid>
+
+                    
+                  
+              </Grid>
+            </Box>
+            </Container>
+          </TabPanel>
+        </TabContext>
       </Dialog>
     </>
   );

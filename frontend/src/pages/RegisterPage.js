@@ -28,7 +28,7 @@ export default function RegisterPage() {
               "url('https://suitecrm.refex.group/crm1.jpg')", //url(https://source.unsplash.com/random?wallpapers)
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === "light"
+              t.palette.mode === "primary"
                 ? t.palette.grey[50]
                 : t.palette.grey[900],
             backgroundSize: "cover",

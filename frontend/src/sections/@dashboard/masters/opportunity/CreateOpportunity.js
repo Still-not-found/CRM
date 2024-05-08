@@ -46,6 +46,7 @@ export default function CreateOpportunity(props) {
     description: null,
     value: null,
     stage: null,
+    contact: null,
     probability: null,
     expectedCloseDate: null,
     account: null,
@@ -65,80 +66,80 @@ export default function CreateOpportunity(props) {
   const [validationErrors, setValidationErrors] = useState({});
   const [openAlert, setOpenAlert] = useState(false);
   
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
+  // const handleFileChange = async (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setSelectedFile(file);
   
-      // Prepare the file to be uploaded
-      const formData = new FormData();
-      formData.append("file", file);
+  //     // Prepare the file to be uploaded
+  //     const formData = new FormData();
+  //     formData.append("file", file);
   
-      try {
-        // Upload the file
-        const response = await axios.post(`${API_URL}/api/upload/single`, formData);
+  //     try {
+  //       // Upload the file
+  //       const response = await axios.post(`${API_URL}/api/upload/single`, formData);
   
-        // Assuming your backend responds with the file's name or path
-        const fileName = response.data.fileName; // Adjust according to your actual response structure
+  //       // Assuming your backend responds with the file's name or path
+  //       const fileName = response.data.fileName; // Adjust according to your actual response structure
   
-        // Update the state to include the uploaded file's name
-        setOpportunityData(prevData => ({
-          ...prevData,
-          invoice: fileName
-        }));
-      } catch (error) {
-        console.error("Error uploading file:", error);
-        // Handle upload error
-      }
-    }
-  };
+  //       // Update the state to include the uploaded file's name
+  //       setOpportunityData(prevData => ({
+  //         ...prevData,
+  //         invoice: fileName
+  //       }));
+  //     } catch (error) {
+  //       console.error("Error uploading file:", error);
+  //       // Handle upload error
+  //     }
+  //   }
+  // };
 
-  useEffect( ()=>{
-    const fetchAssetStatus = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/status`).then((response)=>{
-          // console.log(response.data);
-          setAssetStatus(response.data.results);
-        });
-      } catch (error) {
-        setAssetStatus([]);
-      }
-    }
-    const fetchLocations = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/locations`).then((response)=>{
-          // console.log(response.data);
-          setLocations(response.data.results);
-        });
-      } catch (error) {
-        setLocations([]);
-      }
-    }
-    const fetchSuppliers = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/suppliers`).then((response)=>{
-          // console.log(response.data);
-          setSuppliers(response.data.results);
-        });
-      } catch (error) {
-        setSuppliers([]);
-      }
-    }
-    const fetchCompanies = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/companies`).then((response)=>{
-          // console.log(response.data);
-          setCompanies(response.data.results);
-        });
-      } catch (error) {
-        setCompanies([]);
-      }
-    }
-    fetchAssetStatus();
-    fetchLocations();
-    fetchCompanies();
-    fetchSuppliers();
-  },[]);
+  // useEffect( ()=>{
+  //   const fetchAssetStatus = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/status`).then((response)=>{
+  //         // console.log(response.data);
+  //         setAssetStatus(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setAssetStatus([]);
+  //     }
+  //   }
+  //   const fetchLocations = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/locations`).then((response)=>{
+  //         // console.log(response.data);
+  //         setLocations(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setLocations([]);
+  //     }
+  //   }
+  //   const fetchSuppliers = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/suppliers`).then((response)=>{
+  //         // console.log(response.data);
+  //         setSuppliers(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setSuppliers([]);
+  //     }
+  //   }
+  //   const fetchCompanies = async()=>{
+  //     try {
+  //       await axios.get(`${API_URL}/api/companies`).then((response)=>{
+  //         // console.log(response.data);
+  //         setCompanies(response.data.results);
+  //       });
+  //     } catch (error) {
+  //       setCompanies([]);
+  //     }
+  //   }
+  //   fetchAssetStatus();
+  //   fetchLocations();
+  //   fetchCompanies();
+  //   fetchSuppliers();
+  // },[]);
   const handleOpportunityTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -164,28 +165,28 @@ export default function CreateOpportunity(props) {
   const validate = () => {
     let errors = {};
 
-    if (!Boolean(opportunityData.opportunityName))
-      errors.opportunityName = "Opportunity Name is required";
+    if (!Boolean(opportunityData.Name))
+      errors.Name = "Name is required";
 
     return errors;
   }
 
   const handleSubmit = async (event) => {
     // console.log('It worked');
-    if (!selectedFile) return;
+  //   if (!selectedFile) return;
 
-  const formData = new FormData();
-  formData.append('file', selectedFile);
+  // const formData = new FormData();
+  // formData.append('file', selectedFile);
 
     const errors = validate();
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
+      // console.log("working");
       return;
     }
     try {
-    
-      await axios.post(`${API_URL}/api/opportunitys`, { ...opportunityData, createdBy: loggedUser.user_id }).then((response) => {
-        // console.log(response);
+      await axios.post(`${API_URL}/api/opportunities`, { ...opportunityData, createdBy: loggedUser.user_id }).then((response) => {
+        console.log("response");
         setStatus({
           open: true,
           type: 'success',
@@ -252,13 +253,12 @@ export default function CreateOpportunity(props) {
           <Container maxWidth="x1">
             <Box flexGrow={3}>
               <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ color: '#525252',}}>Opportunity Name</FormLabel>
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ color: '#525252',}}>Name</FormLabel>
                       <TextField
                         id="opportunity_name"
                         size="small"
                         fullWidth
-                        required
                         // label="Series"
                         value={opportunityData.Name}
                         onChange={(event) => {
@@ -288,14 +288,14 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
-        }}>Account Name</FormLabel>
+        }}>Account</FormLabel>
 
                       <TextField
-                        id="serial"
+                        id="account"
                         size="small"
                         fullWidth
                         required
@@ -328,165 +328,7 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4}>      
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Opportunity Amount</FormLabel>
-                      <TextField
-                        id="opportunity_amount"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Opportunity Owner"
-                        value={opportunityData.opportunityAmount}
-                        onChange={(event) => {
-                          handleInputChange("opportunityAmount", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.opportunityAmount)}
-                        helperText={validationErrors.opportunityAmount}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Expected Close Date</FormLabel>
-
-                      <TextField
-                        id="ecd"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Salutation"
-                        value={opportunityData.expectedCloseDate}
-                        onChange={(event) => {
-                          handleInputChange("expectedCloseDate", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.expectedCloseDate)}
-                        helperText={validationErrors.expectedCloseDate}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Type</FormLabel>
-
-                      <TextField
-                        id="type"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Gender"
-                        value={opportunityData.type}
-                        onChange={(event) => {
-                          handleInputChange("type", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.type)}
-                        helperText={validationErrors.type}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-
-                    <Divider sx={{ borderStyle: "dashed" }} />
-
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" required= "true" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Lead Source</FormLabel>
-
-                      <TextField
-                        id="leadsource"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Status"
-                        value={opportunityData.leadSource}
-                        onChange={(event) => {
-                          handleInputChange("leadSource", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.leadSource)}
-                        helperText={validationErrors.leadSource}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" required= "true" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -495,7 +337,6 @@ export default function CreateOpportunity(props) {
                         id="salesstage"
                         size="small"
                         fullWidth
-                        required
                         // label="First Name"
                         value={opportunityData.salesStage}
                         onChange={(event) => {
@@ -525,7 +366,45 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>      
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Opportunity Amount</FormLabel>
+                      <TextField
+                        id="opportunity_amount"
+                        size="small"
+                        fullWidth
+                        // label="Opportunity Owner"
+                        value={opportunityData.opportunityAmount}
+                        onChange={(event) => {
+                          handleInputChange("opportunityAmount", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.opportunityAmount)}
+                        helperText={validationErrors.opportunityAmount}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -565,26 +444,147 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
+
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Expected Close Date</FormLabel>
+
+                      <TextField
+                        id="ecd"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Salutation"
+                        value={opportunityData.expectedCloseDate}
+                        onChange={(event) => {
+                          handleInputChange("expectedCloseDate", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.expectedCloseDate)}
+                        helperText={validationErrors.expectedCloseDate}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Contact</FormLabel>
+
+                      <TextField
+                        id="type"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Gender"
+                        value={opportunityData.contact}
+                        onChange={(event) => {
+                          handleInputChange("contact", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.contact)}
+                        helperText={validationErrors.contact}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
                     <Divider sx={{ borderStyle: "dashed" }} />
 
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Lead Source</FormLabel>
+
+                      <TextField
+                        id="leadsource"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={opportunityData.leadSource}
+                        onChange={(event) => {
+                          handleInputChange("leadSource", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.leadSource)}
+                        helperText={validationErrors.leadSource}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                   
+                    <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
-        }}>description</FormLabel>
+        }}>Type</FormLabel>
 
                       <TextField
-                        id="description"
+                        id="type"
                         size="small"
                         fullWidth
                         required
-                        // label="Opportunity Type"
-                        value={opportunityData.description}
+                        // label="Gender"
+                        value={opportunityData.type}
                         onChange={(event) => {
-                          handleInputChange("description", event.target.value);
+                          handleInputChange("type", event.target.value);
                         }}
-                        error={Boolean(validationErrors.description)}
-                        helperText={validationErrors.description}
+                        error={Boolean(validationErrors.type)}
+                        helperText={validationErrors.type}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -607,25 +607,24 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
-                    {/* <Grid item xs={12} sm={4} md={4}>
-                    
+                    <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
-        }}>Middle Name</FormLabel>
+        }}>Assigned To</FormLabel>
 
                       <TextField
-                        id="systemmanufacturer"
+                        id="type"
                         size="small"
                         fullWidth
                         required
-                        // label="Middle Name"
-                        value={opportunityData.systemmanufacturer}
+                        // label="Gender"
+                        value={opportunityData.assignedTo}
                         onChange={(event) => {
-                          handleInputChange("systemmanufacturer", event.target.value);
+                          handleInputChange("assignedTo", event.target.value);
                         }}
-                        error={Boolean(validationErrors.systemmanufacturer)}
-                        helperText={validationErrors.systemmanufacturer}
+                        error={Boolean(validationErrors.assignedTo)}
+                        helperText={validationErrors.assignedTo}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -648,111 +647,41 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4}>
-                      
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel 
-        component="legend" 
-        sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}
-      >
-        Request Type
-      </FormLabel>
-                      <TextField
-                        id="systemmodel"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Request Type"
-                        value={opportunityData.systemmodel}
-                        onChange={(event) => {
-                          handleInputChange("systemmodel", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.systemmodel)}
-                        helperText={validationErrors.systemmodel}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid> */}
-                    {/* <Grid item xs={12} sm={4} md={4}>
-                      <TextField
-                        id="processor"
-                        size="small"
-                        fullWidth
-                        required
-                        label="Last Name"
-                        value={opportunityData.processor}
-                        onChange={(event) => {
-                          handleInputChange("processor", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.processor)}
-                        helperText={validationErrors.processor}
-                      />
-                    </Grid> */}
-{/* <Grid item xs={12} sm={4} md={4}>
-      <FormLabel component="legend">Last Name</FormLabel>
-      <TextField
-        id="processor"
-        size="small"
-        fullWidth
-        required
-        variant="outlined"
-        value={opportunityData.processor}
-        onChange={(event) => {
-          handleInputChange("processor", event.target.value);
-        }}
-        error={Boolean(validationErrors.processor)}
-        helperText={validationErrors.processor}
-        InputProps={{
-          style: {
-            backgroundColor: '#f3f3f3', // Set the background color here
-          },
-        }}
-        // Apply styles to the input field itself
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#f3f3f3', // Optional: change the border color
-            },
-            '&:hover fieldset': {
-              borderColor: 'primary.main', // Optional: change the border color on hover
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: 'primary.main', // Optional: change the border color when focused
-            },
-          },
-        }}
-        // Remove the label prop from here to avoid redundancy
-      />
-    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
 
-                    </Grid>
-
-                    <Grid item xs={12} sm={4} md={4}>
-                      
-                    </Grid> */}
-
+                    <Grid item xs={12} sm={12} md={12}>
+  <FormLabel component="legend" sx={{ color: '#525252',}}>Description</FormLabel>
+  <TextField
+    id="description"
+    multiline  // Add this to enable multiline input
+    rows={4}   // Adjust the number of rows as needed
+    fullWidth
+    required
+    value={opportunityData.description}
+    onChange={(event) => {
+      handleInputChange("description", event.target.value);
+    }}
+    error={Boolean(validationErrors.description)}
+    helperText={validationErrors.description}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+</Grid>
               </Grid>
             </Box>
             </Container>

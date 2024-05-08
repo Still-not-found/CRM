@@ -19,12 +19,12 @@ const account={
       },
 
     getAllAccountsWithMappedData: async ()=>{
-        const [rows, fields] = await db.query(`SELECT id, acc_id, name,shippingStreet, shippingCity, shippingState, shippingPincode, shippingCountry, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by FROM accounts ;`);
+        const [rows, fields] = await db.query(`SELECT id, acc_id, name, shipping_street, shipping_city, shipping_state, shipping_pincode, shipping_country, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by FROM accounts ;`);
         return rows;
     },
 
     getAccountByAccountIdWithMappedData: async (id) => {
-        const [rows, fields] = await db.query(`SELECT id, acc_id, name,shippingStreet, shippingCity, shippingState, shippingPincode, shippingCountry, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by FROM accounts WHERE acc_id = ?` , [id]);
+        const [rows, fields] = await db.query(`SELECT id, acc_id, name, shipping_street, shipping_city, shipping_state, shipping_pincode, shipping_country, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by FROM accounts WHERE acc_id = ?` , [id]);
         return rows;
     },
 

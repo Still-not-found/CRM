@@ -114,9 +114,61 @@ const accountController = {
 
       const rows = await AccountModel.getAccountByAccountIdWithMappedData(acc_id);
       if (rows.length > 0) {
-        const {id,acc_id,shippingStreet, shippingCity, shippingState, shippingPincode, shippingCountry, description,name,industry,email,annual_revenue,website,phone,type,pan_number,gst_number,assigned_user_id,street,city,state,postal_code,country,modified_by,} = rows[0];
+        const {
+          id,
+          acc_id, 
+          shipping_street, 
+          shipping_city, 
+          shipping_state, 
+          shipping_pincode, 
+          shipping_country, 
+          description,
+          name,
+          industry,
+          email,
+          annual_revenue,
+          website,
+          phone,
+          type,
+          pan_number,
+          gst_number,
+          assigned_user_id,
+          street,
+          city,
+          state,
+          postal_code,
+          country,
+          // modified_by
+        } = rows[0];
 
-        const account = [{id,acc_id,name,shippingStreet, shippingCity, shippingState, shippingPincode, shippingCountry, description,industry,email,annual_revenue,website,phone,type,pan_number,gst_number,assigned_user_id,street,city,state,postal_code,country,modified_by,}];
+        const account = [
+          {
+            id,
+            acc_id, 
+            shipping_street, 
+            shipping_city, 
+            shipping_state, 
+            shipping_pincode, 
+            shipping_country, 
+            description,
+            name,
+            industry,
+            email,
+            annual_revenue,
+            website,
+            phone,
+            type,
+            pan_number,
+            gst_number,
+            assigned_user_id,
+            street,
+            city,
+            state,
+            postal_code,
+            country,
+            // modified_by 
+          }
+        ];
 
         return status.ResponseStatus(res, 200, `Details of Account(${acc_id})`, account);
       }
@@ -137,7 +189,7 @@ const accountController = {
       // Access uploaded files
       const { files } = req;
 
-      const { accName, shippingStreet, shippingCity, shippingState, shippingPincode, shippingCountry, description, industry, annualRevenue, street, phone, website, type, assignedUser, panNumber, gstNumber, email, city, state, postalCode, country, modifiedBy,  } = req.body;
+      const { accName, shippingStreet, shippingCity, shippingState, shippingPincode, shippingCountry, description, industry, annualRevenue, street, phone, website, type, assignedUser, panNumber, gstNumber, email, city, state, postalCode, country, modifiedBy  } = req.body;
       const accountData = {
         name: accName,
         shipping_street: shippingStreet,
@@ -191,18 +243,18 @@ const accountController = {
   },
 
   // Controller to handle file upload
-  uploadFiles: async (req, res) => {
-    try {
-      // Access uploaded files
-      const { files } = req;
+  // uploadFiles: async (req, res) => {
+  //   try {
+  //     // Access uploaded files
+  //     const { files } = req;
 
-      // Process uploaded files as needed
+  //     // Process uploaded files as needed
 
-      return status.ResponseStatus(res, 200, "Files uploaded successfully", { files });
-    } catch (error) {
-      return status.ResponseStatus(res, 500, "Internal server error", { error: error.message });
-    }
-  }
+  //     return status.ResponseStatus(res, 200, "Files uploaded successfully", { files });
+  //   } catch (error) {
+  //     return status.ResponseStatus(res, 500, "Internal server error", { error: error.message });
+  //   }
+  // }
 };
 
 module.exports = accountController;

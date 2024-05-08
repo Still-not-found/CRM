@@ -28,6 +28,7 @@ export default function OpportunityPage(props) {
   const [opportunityId, setOpportunityId] = useState(null);
   const [refresh, setRefresh] = useState(0);
   const [optionState, setOptionState] = useState({
+    canKanban: false,
     canCreate: false,
     canEdit: false,
     canView: false,
@@ -60,6 +61,10 @@ export default function OpportunityPage(props) {
 
   const handleClickCreate = () => {
     handleOptionChange("canCreate", !optionState.canCreate);
+  };
+
+  const handleClickKanban = () => {
+    handleOptionChange("canKanban", !optionState.canKanban);
   };
 
   const handleClickEdit = (idToEdit = null) => {

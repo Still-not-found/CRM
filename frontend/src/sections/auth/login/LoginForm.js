@@ -118,7 +118,7 @@ return (
   </Avatar> */}
     <Typography component="h1" variant="h5">
       <img
-        src="https://suitecrm.refex.group/ITAM.png"
+        src="https://suitecrm.refex.group/itam.png"
         alt="logo"
         height={100}
       />
@@ -181,10 +181,10 @@ return (
       {/* <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         LogIn
       </Button> */}
-      <LoadingButton fullWidth loading={loading} size="large" type="submit" variant="contained" sx={{ mt: 3, mb: 1 }} >
+      <LoadingButton color={"primary"} fullWidth loading={loading} size="large" type="submit" variant="contained" sx={{ mt: 3, mb: 1 }} >
         Login
       </LoadingButton>
-      <Typography variant={"body2"} sx={{ fontWeight: 600 }} color={loginStatus?"text.success":"error"} align="center">
+      <Typography variant={"body2"} sx={{ fontWeight: 600 }} color={loginStatus?"text.primary":"error"} align="center">
         {loginStatusMessage}
       </Typography>
       {/* <Box
@@ -206,7 +206,7 @@ return (
       <Typography
               variant="body2"
               display={"inline-block"}
-              color={"info"}
+              color="primary"
               sx={{ fontWeight: 600 }}
             >
         <Link href="/forgot_password" underline="hover">
@@ -218,7 +218,7 @@ return (
       <Typography
               variant="body2"
               display={"inline-block"}
-              color={"info"}
+              color="primary"
               sx={{ fontWeight: 600 }}
             >
         <Link href="/register" underline="hover">

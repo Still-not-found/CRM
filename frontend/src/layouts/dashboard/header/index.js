@@ -28,9 +28,8 @@ const HEADER_DESKTOP = 80;
 
 
 // ----------------------------------------------------------------------
-
 const StyledRoot = styled(AppBar)(({ theme, navBarLapOpen, trigger}) => ({
-  ...bgBlur({ color: theme.palette.background.default }),
+  ...bgBlur({ color: theme.palette.background.default,opacity:-1,blur:0  }),
   boxShadow: 'none',
   transition: 'height 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
   height: HEADER_MOBILE,

@@ -52,38 +52,37 @@ export default function CreateLead(props) {
   const [tabValue, setTabValue] = useState("1");
   
   const [leadData, setLeadData] = useState({
-        
         leadName: "",
-        leadStatus: "",
-        officePhone: "",
-        description: "",
-        source: "",
-        interestLevel: "",
-        firstName: "",
-        lastName: "",
-        jobTitle: "",
-        mobile: "",
-        fax: "",
-        department: "",
-        accountName: "",
-        email: "",
-        leadSource: "",
-        statusDescription: "",
-        leadSourceDescription: "",
-        opportunityAmount: "",
-        referredBy: "",
-        assignedTo: "",
-        address: "",
-        city: "",
-        state: "",
-        postalCode: "",
-        country: "",
-        shippingAddress: "",
-        shippingCity: "",
-        shippingCountry: "",
-        shippingState: "",
-        shippingPincode: "",
-        createdBy: "",
+        leadStatus: null,
+        officePhone: null,
+        description: null,
+        source: null,
+        interestLevel: null,
+        firstName: null,
+        lastName: null,
+        jobTitle: null,
+        mobile: null,
+        fax: null,
+        department: null,
+        accountName: null,
+        email: null,
+        leadSource: null,
+        statusDescription: null,
+        leadSourceDescription: null,
+        opportunityAmount: null,
+        referredBy: null,
+        assignedTo: null,
+        address: null,
+        city: null,
+        state: null,
+        postalCode: null,
+        country: null,
+        shippingAddress: null,
+        shippingCity: null,
+        shippingCountry: null,
+        shippingState: null,
+        shippingPincode: null,
+        createdBy: null,
   });
 
   const [suppliers, setSuppliers] = useState([]);
@@ -203,10 +202,10 @@ export default function CreateLead(props) {
 
   const handleSubmit = async (event) => {
     // console.log('It worked');
-    if (!selectedFile) return;
+    // if (!selectedFile) return;
 
-  const formData = new FormData();
-  formData.append('file', selectedFile);
+  // const formData = new FormData();
+  // formData.append('file', selectedFile);
 
     const errors = validate();
     if (Object.keys(errors).length > 0) {

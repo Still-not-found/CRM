@@ -261,7 +261,7 @@ export default function EditAccount(props) {
       return;
     }
     try {
-      await axios.put(`${API_URL}/api/accounts/${idToEdit}`, { ...accountData, purchasedate: dayjs(accountData.purchasedate).format("YYYY-MM-DD"),warrenty: dayjs(accountData.warrenty).format("YYYY-MM-DD"), updatedBy: loggedUser.user_id }).then((response) => {
+      await axios.put(`${API_URL}/api/accounts/${idToEdit}`, { ...accountData, modifiedBy: loggedUser.id }).then((response) => {
         console.log(response);
         setStatus({
           open: true,
@@ -296,7 +296,7 @@ export default function EditAccount(props) {
       <Dialog
         fullWidth
         maxWidth="xl"
-        open={optionState.canCreate}
+        open={optionState.canEdit}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
@@ -308,9 +308,9 @@ export default function EditAccount(props) {
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="Edit Account" value="1" sx={{ fontSize: '18.92px', }}  />
+            <Tab label="New Account" value="1" sx={{ fontSize: '18.92px', }}  />
 
-            <Box flexGrow={1} >
+            {/* <Box flexGrow={1} >
             <DialogActions>
               <SubmitButton  variant="contained" color="primary" onClick={handleSubmit} >
                 Save
@@ -321,7 +321,7 @@ export default function EditAccount(props) {
             </DialogActions>
 
           </Box>
-           
+            */}
           </TabList>
           
           <Divider sx={{ borderStyle: "fill" }} />
@@ -522,10 +522,8 @@ export default function EditAccount(props) {
                       />
                     </Grid>
 
-                    <Divider sx={{ borderStyle: "dashed" }} />
-
                     <Grid item xs={12} sm={4} md={6}>
-                    <FormLabel component="legend" required= "true" sx={{ 
+                    <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>PAN Number</FormLabel>
@@ -581,9 +579,8 @@ export default function EditAccount(props) {
                       <Typography></Typography>
                       </Grid>
 
-
                     <Grid item xs={12} sm={4} md={6}>
-                    <FormLabel component="legend" required= "true" sx={{ 
+                    <FormLabel component="legend"  sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>Street</FormLabel>
@@ -624,12 +621,9 @@ export default function EditAccount(props) {
 
                     <Grid item xs={12} sm={4} md={6}>
                     
-                    <FormLabel component="legend" required= "true" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-          
+                    <FormLabel component="legend"  sx={{ 
+          color: '#525252', 
         }}>Street</FormLabel>
-
                       <TextField
                         id="shippingstreet"
                         size="small"
@@ -743,8 +737,6 @@ export default function EditAccount(props) {
                         }}
                       />
                     </Grid>
-
-                    <Divider sx={{ borderStyle: "dashed" }} />
 
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
@@ -908,9 +900,6 @@ export default function EditAccount(props) {
                       />
                     </Grid>
 
-                    {/* <Grid item xs={12} sm={4} md={6}>
-                      
-                    </Grid> */}
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel 
         component="legend" 
@@ -1041,23 +1030,24 @@ export default function EditAccount(props) {
       },
     }}
   />
-</Grid>
-
-                  
+                    </Grid>        
               </Grid>
             </Box>
             </Container>
           </TabPanel>
+          <Divider sx={{ borderStyle: "dashed" }} />
+          <Box flexGrow={1} p={2}>
+            <DialogActions>
+              <SubmitButton color="success" variant="contained" onClick={handleSubmit} >
+                Save
+              </SubmitButton>
+              <Button variant="contained" color="primary" onClick={handleClose}>
+                Close
+              </Button>
+            </DialogActions>
+
+          </Box>
         </TabContext>
-        {/* <TabContext value={tabValue}>
-          <TabList
-            onChange={handleAccountTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-        </TabContext> */}
       </Dialog>
     </>
   );

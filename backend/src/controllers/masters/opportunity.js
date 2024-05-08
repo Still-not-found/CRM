@@ -77,11 +77,11 @@ const opportunityController = {
       return status.ResponseStatus(res, 500, 'Internal server error', { error: error.message });
     }
   },
-  getAllOpportunitys: async (req, res) => {
+  getAllOpportunities: async (req, res) => {
     try {
-      const opportunitys = await OpportunityModel.getAllOpportunitys();
-      if (opportunitys.length > 0) {
-        return status.ResponseStatus(res, 200, "List of all Opportunitys", opportunitys);
+      const opportunities = await OpportunityModel.getAllOpportunities();
+      if (opportunities.length > 0) {
+        return status.ResponseStatus(res, 200, "List of all Opportunities", opportunities);
       }
       return status.ResponseStatus(res, 400, "No data found");
     } catch (error) {
@@ -89,11 +89,11 @@ const opportunityController = {
     }
   },
 
-  getAllOpportunitysWithMappedData: async (req, res) => {
+  getAllOpportunitiesWithMappedData: async (req, res) => {
     try {
-      const rows = await OpportunityModel.getAllOpportunitysWithMappedData();
+      const rows = await OpportunityModel.getAllOpportunitiesWithMappedData();
       if (rows.length > 0) {
-        return status.ResponseStatus(res, 200, "List of all Opportunitys", rows);
+        return status.ResponseStatus(res, 200, "List of all Opportunities", rows);
       }
       return status.ResponseStatus(res, 400, "No data found");
     } catch (error) {

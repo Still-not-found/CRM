@@ -21,14 +21,15 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", alignRight: false },
-  { id: "registered_owner", label: "Account", alignRight: false },
-  { id: "os_name", label: "Stage", alignRight: false },
-  { id: "serial", label: "Assigned User", alignRight: false },
-  { id: "product_id", label: "Close Date", alignRight: false },
-  { id: "system_manufacturer", label: "Amount", alignRight: false },
+  { id: "account_id", label: "Account", alignRight: false },
+  { id: "sales_stage", label: "Stage", alignRight: false },
+  { id: "assigned_to", label: "Assigned User", alignRight: false },
+  { id: "expected_close_date", label: "Close Date", alignRight: false },
+  { id: "opportunity_amount", label: "Amount", alignRight: false },
   // { id: "system_model", label: "Model", alignRight: false },
   // { id: "processor", label: "Processor", alignRight: false },
   // { id: "domain", label: "Domain", alignRight: false },
+  { id: "" },
   { id: "" },
 ];
 
@@ -66,7 +67,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function ListOpportunity(props){
     
- const {handleClickCreate, handleClickEdit, handleClickView, handleClickDelete, setStatus, refresh, loggedUser }=props;
+ const {handleClickCreate, handleClickKanban, handleClickEdit, handleClickView, handleClickDelete, setStatus, refresh, loggedUser }=props;
  const navigate = useNavigate();
  const [opportunityRows, setOpportunityRows]=useState([]);
 
@@ -80,7 +81,7 @@ export default function ListOpportunity(props){
 
  const [selected, setSelected] = useState([]);
 
- const [orderBy, setOrderBy] = useState("opportunity_id");
+ const [orderBy, setOrderBy] = useState("opportunities_id");
 
  const [filterName, setFilterName] = useState("");
 
@@ -97,7 +98,7 @@ export default function ListOpportunity(props){
   const fetchData= async()=>{
     
     try {
-      await axios.get(`${API_URL}/api/opportunitys`).then((response)=> {
+      await axios.get(`${API_URL}/api/opportunities`).then((response)=> {
         if(response.data.status){
           setOpportunityRows(response.data.results);
         }
@@ -233,11 +234,11 @@ const isNotFound = !filteredOpportunitys.length && !!filterName;
               {breadcrumbs}
             </Breadcrumbs>
           </Box>
+          {/* <IconButton>k</IconButton> */}
           <Button
             variant="contained"
             startIcon={<AddIcon fontSize="large" />}
             onClick={handleClickCreate}
-            
           >
             New&nbsp;Opportunity
           </Button>
@@ -292,24 +293,21 @@ const isNotFound = !filteredOpportunitys.length && !!filterName;
                   .map((row) => {
                     const {
                       id,
-                      opportunity_id,
-                      name, 
-                      serial,              
-                      registered_owner, 
-                      os_name, 
-                      host_name,
-                      product_id,
-                      system_manufacturer,
-                      system_model,
-                      processor,
-                      domain,
+                      opportunities_id,
+                      name,
+                      account_id, 
+                      sales_stage,              
+                      opportunity_amount, 
+                      expected_close_date, 
+                      assigned_to,
+                      stage,
                     } = row;
-                    const selectedOpportunity = selected.indexOf(opportunity_id) !== -1;
+                    const selectedOpportunity = selected.indexOf(opportunities_id) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={opportunity_id}
+                        key={opportunities_id}
                         tabIndex={-1}
                         role="checkbox"
                         selected={selectedOpportunity}
@@ -320,30 +318,27 @@ const isNotFound = !filteredOpportunitys.length && !!filterName;
                            "&:hover": {
                             textDecoration:'underline'
                           }
-                        }} align="left" onClick={()=>{navigate(`/opportunity_detail/${opportunity_id}`)}}>
+                        }} align="left" onClick={()=>{navigate(`/opportunity_detail/${opportunities_id}`)}}>
                             {name}
                         </TableCell>
 
-                        <TableCell align="left">{registered_owner}</TableCell>
 
-                        <TableCell align="left">{os_name}</TableCell>
+                        <TableCell align="left">{account_id}</TableCell>
 
-                        <TableCell align="left">{serial}</TableCell>
+                        <TableCell align="left">{sales_stage}</TableCell>
 
-                        <TableCell align="left">{product_id}</TableCell>
+                        <TableCell align="left">{assigned_to}</TableCell>
 
-                        <TableCell align="left">{system_manufacturer}</TableCell>
+                        <TableCell align="left">{expected_close_date}</TableCell>
 
-                        <TableCell align="left">{system_model}</TableCell>
+                        <TableCell align="left">{opportunity_amount}</TableCell>
 
-                        <TableCell align="left">{processor}</TableCell>
-
-                        <TableCell align="left">{domain}</TableCell>
+                        <TableCell align="left">{}</TableCell>
 
                         <TableCell align="right">
                           <IconButton
                             color="inherit"
-                            onClick={(e)=>{handleOpenMenu(e,opportunity_id)}}
+                            onClick={(e)=>{handleOpenMenu(e,opportunities_id)}}
                           >
                             <Iconify icon={"eva:more-vertical-fill"} />
                           </IconButton>

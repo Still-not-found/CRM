@@ -1,35 +1,22 @@
 import React, { forwardRef, useEffect, useState } from 'react';
-
 // @mui ------------------------------------------------------
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  FormLabel,
-  Grid,
-  TextField,
-  Typography,
-  styled
-} from "@mui/material";
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
+import {Box,Button,Container,Divider,FormLabel,Grid,TextField,Typography,styled} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import Slide from "@mui/material/Slide";
 import Tab from "@mui/material/Tab";
-
-// @mui-icons ------------------------------------------------
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 // Components -----------------------------------------------
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
-
-
+import dayjs from "dayjs";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -79,86 +66,12 @@ export default function CreateAccount(props) {
 
   const [suppliers, setSuppliers] = useState([]);
   const [companies, setCompanies] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
   const [assetstatus, setAssetStatus] = useState([]);
   const [locations, setLocations] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
   const [openAlert, setOpenAlert] = useState(false);
   
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-  
-      // Prepare the file to be uploaded
-      const formData = new FormData();
-      formData.append("file", file);
-  
-      try {
-        // Upload the file
-        const response = await axios.post(`${API_URL}/api/upload/single`, formData);
-  
-        // Assuming your backend responds with the file's name or path
-        const fileName = response.data.fileName; // Adjust according to your actual response structure
-  
-        // Update the state to include the uploaded file's name
-        setAccountData(prevData => ({
-          ...prevData,
-          invoice: fileName
-        }));
-      } catch (error) {
-        console.error("Error uploading file:", error);
-        // Handle upload error
-      }
-    }
-  };
-
-  useEffect( ()=>{
-    const fetchAssetStatus = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/status`).then((response)=>{
-          // console.log(response.data);
-          setAssetStatus(response.data.results);
-        });
-      } catch (error) {
-        setAssetStatus([]);
-      }
-    }
-    const fetchLocations = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/locations`).then((response)=>{
-          // console.log(response.data);
-          setLocations(response.data.results);
-        });
-      } catch (error) {
-        setLocations([]);
-      }
-    }
-    const fetchSuppliers = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/suppliers`).then((response)=>{
-          // console.log(response.data);
-          setSuppliers(response.data.results);
-        });
-      } catch (error) {
-        setSuppliers([]);
-      }
-    }
-    const fetchCompanies = async()=>{
-      try {
-        await axios.get(`${API_URL}/api/companies`).then((response)=>{
-          // console.log(response.data);
-          setCompanies(response.data.results);
-        });
-      } catch (error) {
-        setCompanies([]);
-      }
-    }
-    fetchAssetStatus();
-    fetchLocations();
-    fetchCompanies();
-    fetchSuppliers();
-  },[]);
   const handleAccountTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -181,23 +94,15 @@ export default function CreateAccount(props) {
     setOpenAlert(!openAlert);
   };
  
-  
-
   const validate = () => {
     let errors = {};
-
-    if (!Boolean(accountData.accountName))
-      errors.accountName = "Account Name is required";
-
+    if (!Boolean(accountData.accName))
+      errors.accName = "Account Name is required";
     return errors;
   }
 
   const handleSubmit = async (event) => {
-    // console.log('It worked');
-    if (!selectedFile) return;
-
-  const formData = new FormData();
-  formData.append('file', selectedFile);
+    
 
     const errors = validate();
     if (Object.keys(errors).length > 0) {
@@ -205,9 +110,7 @@ export default function CreateAccount(props) {
       return;
     }
     try {
-    
       await axios.post(`${API_URL}/api/accounts`, { ...accountData, createdBy: loggedUser.user_id }).then((response) => {
-        // console.log(response);
         setStatus({
           open: true,
           type: 'success',
@@ -215,7 +118,6 @@ export default function CreateAccount(props) {
         });
         setRefresh((prev) => prev + 1);
       }).catch((error) => {
-        // console.log(error);
         setStatus({
           open: true,
           type: 'error',
@@ -279,8 +181,7 @@ export default function CreateAccount(props) {
                       <TextField
                         id="account_name"
                         size="small"
-                        fullWidth
-                        required
+                        fullWidth 
                         // label="Series"
                         value={accountData.accName}
                         onChange={(event) => {
@@ -293,7 +194,6 @@ export default function CreateAccount(props) {
                             backgroundColor: '#f3f3f3', // Set the background color here
                           },
                         }}
-                        // Apply styles to the input field itself
                         sx={{
                           '& .MuiOutlinedInput-root': {
                             '& fieldset': {
@@ -313,9 +213,7 @@ export default function CreateAccount(props) {
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
-          // Add more styling as needed
         }}>Assigned User</FormLabel>
-
                       <TextField
                         id="au"
                         size="small"
@@ -333,7 +231,6 @@ export default function CreateAccount(props) {
                             backgroundColor: '#f3f3f3', // Set the background color here
                           },
                         }}
-                        // Apply styles to the input field itself
                         sx={{
                           '& .MuiOutlinedInput-root': {
                             '& fieldset': {
@@ -350,44 +247,40 @@ export default function CreateAccount(props) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={6}>      
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Email</FormLabel>
-                      <TextField
-                        id="email"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Account Owner"
-                        value={accountData.email}
-                        onChange={(event) => {
-                          handleInputChange("email", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.email)}
-                        helperText={validationErrors.email}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+      <FormLabel component="legend" sx={{ color: '#525252' }}>
+        Email
+      </FormLabel>
+      <TextField
+        id="email"
+        type="email"  // Ensures the input is an email address
+        size="small"
+        fullWidth
+        required
+        value={accountData.email}
+        onChange={(event) => handleInputChange("email", event.target.value)}
+        error={Boolean(validationErrors.email)}
+        helperText={validationErrors.email}
+        InputProps={{
+          style: {
+            backgroundColor: '#f3f3f3',  // Set the background color here
+          },
+        }}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#f3f3f3',  // Optional: change the border color
+            },
+            '&:hover fieldset': {
+              borderColor: 'primary.main',  // Optional: change the border color on hover
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'primary.main',  // Optional: change the border color when focused
+            },
+          },
+        }}
+      />
+    </Grid>
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
@@ -430,9 +323,7 @@ export default function CreateAccount(props) {
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
-          // Add more styling as needed
         }}>GSTIN</FormLabel>
-
                       <TextField
                         id="gstin"
                         size="small"
@@ -467,47 +358,39 @@ export default function CreateAccount(props) {
                       />
                     </Grid>
 
-                    <Divider sx={{ borderStyle: "dashed" }} />
-
                     <Grid item xs={12} sm={4} md={6}>
-                    <FormLabel component="legend" required= "true" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>PAN Number</FormLabel>
-
-                      <TextField
-                        id="pannumber"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Status"
-                        value={accountData.panNumber}
-                        onChange={(event) => {
-                          handleInputChange("panNumber", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.panNumber)}
-                        helperText={validationErrors.panNumber}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
+      <FormLabel component="legend" sx={{ color: '#525252' }}>
+        PAN Number
+      </FormLabel>
+      <TextField
+        id="pannumber"
+        size="small"
+        fullWidth
+        required
+        value={accountData.panNumber}
+        onChange={(event) => handleInputChange("panNumber", event.target.value)}
+        error={Boolean(validationErrors.panNumber)}
+        helperText={validationErrors.panNumber || "Enter valid PAN (ABCDE1234F)"}
+        inputProps={{
+          maxLength: 16,  // Restrict input to 10 characters
+          pattern: '[A-Z]{5}[0-9]{4}[A-Z]{1}', // Regex pattern to check for valid PAN format
+          style: { backgroundColor: '#f3f3f3' },
+        }}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#f3f3f3', // Change the border color
+            },
+            '&:hover fieldset': {
+              borderColor: 'primary.main', // Change the border color on hover
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'primary.main', // Change the border color when focused
+            },
+          },
+        }}
+      />
+    </Grid>
                     <Grid item xs={12} sm={4} md={6}></Grid>
                     <Grid item xs={12} sm={4} md={6}></Grid>
                     
@@ -526,9 +409,8 @@ export default function CreateAccount(props) {
                       <Typography></Typography>
                       </Grid>
 
-
                     <Grid item xs={12} sm={4} md={6}>
-                    <FormLabel component="legend" required= "true" sx={{ 
+                    <FormLabel component="legend"  sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>Street</FormLabel>
@@ -569,12 +451,9 @@ export default function CreateAccount(props) {
 
                     <Grid item xs={12} sm={4} md={6}>
                     
-                    <FormLabel component="legend" required= "true" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-          
+                    <FormLabel component="legend"  sx={{ 
+          color: '#525252', 
         }}>Street</FormLabel>
-
                       <TextField
                         id="shippingstreet"
                         size="small"
@@ -688,8 +567,6 @@ export default function CreateAccount(props) {
                         }}
                       />
                     </Grid>
-
-                    <Divider sx={{ borderStyle: "dashed" }} />
 
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
@@ -853,9 +730,6 @@ export default function CreateAccount(props) {
                       />
                     </Grid>
 
-                    {/* <Grid item xs={12} sm={4} md={6}>
-                      
-                    </Grid> */}
                     <Grid item xs={12} sm={4} md={6}>
                     <FormLabel 
         component="legend" 
@@ -986,23 +860,12 @@ export default function CreateAccount(props) {
       },
     }}
   />
-</Grid>
-
-                  
+                    </Grid>        
               </Grid>
             </Box>
             </Container>
           </TabPanel>
         </TabContext>
-        {/* <TabContext value={tabValue}>
-          <TabList
-            onChange={handleAccountTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-        </TabContext> */}
       </Dialog>
     </>
   );

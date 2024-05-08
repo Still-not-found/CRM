@@ -46,11 +46,12 @@ const contactController = {
       const { files } = req;
 
       console.log(req.body);
-      const { contactName, account, middelName, designation, gender, salutation, companyName, lead, lastName, leadSource, reportsTo, description, fax, mobile, department, jobTitle, email, address, city, state, postalCode, country, officePhone, modifiedBy, createdBy } = req.body;
+      const { contactName,phone, CStatus, account, middelName, designation, gender, salutation, companyName, lead, lastName, leadSource, reportsTo, description, fax, mobile, department, jobTitle, email, address, city, state, postalCode, country, officePhone, modifiedBy, createdBy } = req.body;
       const contactData = {
         first_name: contactName,
         email: email,
-        phone: phone,
+        c_status: CStatus,
+        // phone: phone,
         city: city,
         state:state,
         postal_code: postalCode,
@@ -125,6 +126,7 @@ const contactController = {
           first_name,
           last_name,
           email,
+          c_status,
           office_phone,
           job_title,
           department,
@@ -155,6 +157,7 @@ const contactController = {
             account_id,
             lead_id,
             first_name,
+            c_status,
             last_name,
             email,
             office_phone,
@@ -199,13 +202,14 @@ const contactController = {
       // Access uploaded files
       const { files } = req;
 
-      const { contactName, account, middelName, designation, gender, salutation, companyName, lead, lastName, leadSource, reportsTo, description, fax, mobile, department, jobTitle, email, address, city, state, postalCode, country, officePhone, modifiedBy, createdBy } = req.body;
+      const { contactName, phone, CStatus, account, middelName, designation, gender, salutation, companyName, lead, lastName, leadSource, reportsTo, description, fax, mobile, department, jobTitle, email, address, city, state, postalCode, country, officePhone, modifiedBy, createdBy } = req.body;
       const contactData = {
         first_name: contactName,
         email: email,
-        phone: phone,
+        // phone: phone,
         city: city,
         state:state,
+        c_status: CStatus,
         postal_code: postalCode,
         country: country,
         account_id: account,

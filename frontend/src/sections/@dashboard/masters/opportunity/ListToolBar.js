@@ -72,11 +72,7 @@ export default function ListToolBar({ numSelected, filterName, onFilterName }) {
           </IconButton>
         </Tooltip>
       ) : ( null
-        // <Tooltip title="Filter list">
-        //   <IconButton>
-        //     <Iconify icon="ic:round-filter-list" />
-        //   </IconButton>
-        // </Tooltip>
+       
       )}
     </StyledRoot>
   );

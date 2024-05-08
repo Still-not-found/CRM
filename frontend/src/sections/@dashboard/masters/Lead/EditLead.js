@@ -1,9 +1,9 @@
-import VisibilityIcon from '@mui/icons-material/Visibility'; // or any icon you prefer
+import { forwardRef, useEffect, useState } from "react";
+import React from 'react';
+import { Link as RouterLink, useHref, useNavigate } from "react-router-dom";
+import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
-import React, { forwardRef, useEffect, useState } from 'react';
-
-// @mui ------------------------------------------------------
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import VisibilityIcon from '@mui/icons-material/Visibility'; // or any icon you prefer
 
 // @mui ------------------------------------------------------
 import TabContext from "@mui/lab/TabContext";
@@ -12,17 +12,17 @@ import TabPanel from "@mui/lab/TabPanel";
 import {
   Box,
   Button,
-  Container,
   Divider,
-  FormLabel,
   Grid,
+  FormLabel,
+  Container,
   TextField,
   Typography,
-  styled
+  styled,
+  Autocomplete,
+  InputAdornment,
+  Tooltip
 } from "@mui/material";
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -34,6 +34,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 // @mui-icons ------------------------------------------------
+import AddIcon from "@mui/icons-material/Add";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 // Components -----------------------------------------------
 import axios from "axios";
 import dayjs from "dayjs";
@@ -62,61 +65,45 @@ export default function EditLead(props) {
   const { handleTabChange, userData } = props;
   const [tabValue, setTabValue] = useState("1");
   const [leadData, setLeadData] = useState({
+    
     leadName: "",
-    assettag: "",
-    serial: "",
-    // assignedto: "",
-    hostname: "",
-    osname: "",
-    purchasedate: null,
-    osversion: "",
-    osmanufacturer: "",
-    osbuildtype: "",
-    osconfiguration: "",
-    registeredowner: "",
-    productid: "",
-    originalinstalldate: "",
-    systemmanufacturer: "",
-    systemmodel: "",
-    processor: "",
-    domain: "",
-    systemtype: "",
-    biosversion: "",
-    windowsdirectory: "",
-    systemdirectory: "",
-    systemlocale: "",
-    timezone: "",
-    totalphysicalram: "",
-    virtualrammax: "",
-    virtualramavailable: "",
-    installedsoftware: "",
-    ordernumber: null,
-    purchasecost: null,
-    billedentity: null,
-    assignedentity: null,
-    supplier: null,
-    location: null,
-    warrenty: null,
-    invoice: null,
-    po: null,
+    shippingCity: null,
+    shippingCountry: null,
+    shippingState: null,
+     shippingPincode: null,
+     leadStatus: null,
+     officePhone: null,
+     description: null,
+    source: null,
+    interestLevel: null,
+    firstName: null,
+     lastName: null,
+    jobTitle: null,
+     mobile: null,
+     fax: null,
+     department: null,
+    accountName: null,
+    email: null,
+     leadSource: null,
+     statusDescription: null,
+     leadSourceDescription: null,
+    opportunityAmount: null,
+    referredBy: null,
+     assignedTo: null,
+     address: null,
+     city: null,
+    state: null,
+     postalCode: null,
+     country: null,
+     shippingAddress: null,
+     createdBy: null, 
+    // modifiedBy, createdBy
   });
-
-  const softwareDetailsArray = leadData.installedsoftware.split('", "');
-
-  // Function to chunk the array into subarrays of length 4
-  const chunkArray = (array, chunkSize) => {
-    const result = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-      const chunk = array.slice(i, i + chunkSize);
-      result.push(chunk);
-    }
-    return result;
-  };
-  const softwareChunks = chunkArray(softwareDetailsArray, 4);
 
   const handleLeadTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
 
   const [companies, setCompanies] = useState([]);
   const [assetstatus, setAssetStatus] = useState([]);
@@ -200,52 +187,41 @@ export default function EditLead(props) {
     
     const fetchData = async () => {
       try {
-        await axios.get(`${API_URL}/api/computers/${idToEdit}`).then((response) => {
+        await axios.get(`${API_URL}/api/leads/${idToEdit}`).then((response) => {
           if (response.data.status) {
-            const { name, asset_tag, invoice, po, warrenty, order_number, purchase_cost, serial, purchase_date, host_name, os_name, os_version, os_manufacturer, os_build_type, os_configuration, registered_owner, product_id, original_install_date, system_manufacturer, system_model, processor, domain, sophos, sapphire, system_type, bios_version, windows_directory, system_directory, system_locale, time_zone, total_physical_ram, virtual_ram_max, virtual_ram_available, installed_software, billed_entity, assigned_entity, supplier_id, location_id, status_id, } = response.data.results[0];
+            const { lead_id, title, lead_status, description, source, interest_level, first_name, last_name, job_title, mobile, department, fax, account_name, email, lead_source, status_description, lead_source_description, opportunity_amount, referred_by, assigned_to, address, city, state, postal_code, country, shipping_address, shipping_city, shipping_country, shipping_state, shipping_pincode } = response.data.results[0];
             setLeadData({
-              leadName: name,
-              assettag: asset_tag,
-              serial: serial,
-              // assigned_to: assignedto,
-              hostname: host_name,
-              osname: os_name,
-              purchasedate: dayjs(purchase_date),
-              osversion: os_version,
-              osmanufacturer: os_manufacturer,
-              osbuildtype: os_build_type,
-              osconfiguration: os_configuration,
-              registeredowner: registered_owner,
-              productid: product_id,
-              // originalinstalldate: dayjs(original_install_date),
-              systemmanufacturer: system_manufacturer,
-              systemmodel: system_model,
-              processor: processor,
-              domain: domain,
-              sophos: sophos,
-              sapphire: sapphire,
-              systemtype: system_type,
-              biosversion: bios_version,
-              windowsdirectory: windows_directory,
-              systemdirectory: system_directory,
-              systemlocale: system_locale,
-              timezone: time_zone,
-              totalphysicalram: total_physical_ram,
-              virtualrammax: virtual_ram_max,
-              virtualramavailable: virtual_ram_available,
-              installedsoftware: installed_software,
-              billedentity: billed_entity,
-              assignedentity: assigned_entity,
-              supplier: supplier_id,
-              location: location_id,
-              assetStatus: status_id,
-              ordernumber: order_number,
-              purchasecost: purchase_cost,
-              warrenty: dayjs(warrenty),
-              invoice: invoice,
-              po:po,
-              // zoneId: zone.id,
-              // countryId: country.country_id,
+              leadName: "",
+    shippingCity: shipping_city,
+    shippingCountry: shipping_country,
+    shippingState: shipping_state,
+     shippingPincode: shipping_pincode,
+     leadStatus: lead_status,
+    //  officePhone: off,
+     description: description,
+    source: source,
+    interestLevel: interest_level,
+    firstName: first_name,
+     lastName: last_name,
+    jobTitle: job_title,
+     mobile: mobile,
+     fax: fax,
+     department: department,
+    accountName: account_name,
+    email: email,
+    //  leadSource: lead_source_description,
+     statusDescription: status_description,
+     leadSourceDescription: lead_source_description,
+    opportunityAmount: opportunity_amount,
+    referredBy: referred_by,
+     assignedTo: assigned_to,
+     address: address,
+     city: city,
+    state: state,
+     postalCode: postal_code,
+     country: country,
+     shippingAddress: shipping_address,
+     
             });
           }
         }).catch((error) => {
@@ -306,7 +282,7 @@ export default function EditLead(props) {
       return;
     }
     try {
-      await axios.put(`${API_URL}/api/leads/${idToEdit}`, { ...leadData, purchasedate: dayjs(leadData.purchasedate).format("YYYY-MM-DD"),warrenty: dayjs(leadData.warrenty).format("YYYY-MM-DD"), updatedBy: loggedUser.user_id }).then((response) => {
+      await axios.put(`${API_URL}/api/leads/${idToEdit}`, { ...leadData, modifiedBy: loggedUser.id }).then((response) => {
         console.log(response);
         setStatus({
           open: true,
@@ -335,13 +311,13 @@ export default function EditLead(props) {
   return (
     <>
       <Helmet>
-        <title>Lead Create | IT Asset Management</title>
+        <title>Lead Edit | CRM Sales</title>
       </Helmet>
 
       <Dialog
         fullWidth
         maxWidth="xl"
-        open={optionState.canCreate}
+        open={optionState.canEdit}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
@@ -374,60 +350,55 @@ export default function EditLead(props) {
           <Container maxWidth="x1">
             <Box flexGrow={3}>
               <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ color: '#525252',}}>Series</FormLabel>
-                      <TextField
-                        id="lead_name"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Series"
-                        value={leadData.leadName}
-                        onChange={(event) => {
-                          handleInputChange("leadName", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.leadName)}
-                        helperText={validationErrors.leadName}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
+              <Grid item xs={12} sm={4} md={4}>
+  <FormLabel component="legend" sx={{ color: '#525252' }}>Series</FormLabel>
+  <TextField
+    id="lead_name"
+    size="small"
+    fullWidth
+    disabled// Set the field as read-only
+    defaultValue="CRM-LEAD-YYYY-"  // Set the default value
+    error={Boolean(validationErrors.leadName)}
+    helperText={validationErrors.leadName}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    // Apply styles to the input field itself
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+</Grid>
 
                     <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>Job Title</FormLabel>
-
                       <TextField
-                        id="serial"
+                        id="jobtitle"
                         size="small"
                         fullWidth
                         required
                         // label="Job Title"
-                        value={leadData.serial}
+                        value={leadData.jobTitle}
                         onChange={(event) => {
-                          handleInputChange("serial", event.target.value);
+                          handleInputChange("jobTitle", event.target.value);
                         }}
-                        error={Boolean(validationErrors.serial)}
-                        helperText={validationErrors.serial}
+                        error={Boolean(validationErrors.jobTitle)}
+                        helperText={validationErrors.jobTitle}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -456,17 +427,17 @@ export default function EditLead(props) {
           // Add more styling as needed
         }}>Lead Owner</FormLabel>
                       <TextField
-                        id="host_name"
+                        id="assignedTo"
                         size="small"
                         fullWidth
                         required
                         // label="Lead Owner"
-                        value={leadData.hostname}
+                        value={leadData.assignedTo}
                         onChange={(event) => {
-                          handleInputChange("hostname", event.target.value);
+                          handleInputChange("assignedTo", event.target.value);
                         }}
-                        error={Boolean(validationErrors.hostname)}
-                        helperText={validationErrors.hostname}
+                        error={Boolean(validationErrors.assignedTo)}
+                        helperText={validationErrors.assignedTo}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -488,19 +459,19 @@ export default function EditLead(props) {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={4} md={1}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>Salutation</FormLabel>
 
                       <TextField
-                        id="os_name"
+                        id="salutation"
                         size="small"
                         fullWidth
                         required
                         // label="Salutation"
-                        value={leadData.osname}
+                        value={leadData.salutation}
                         onChange={(event) => {
                           handleInputChange("osname", event.target.value);
                         }}
@@ -527,14 +498,89 @@ export default function EditLead(props) {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={4} md={1.5}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>First Name</FormLabel>
+
+                      <TextField
+                        id="firstName"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="First Name"
+                        value={leadData.firstName}
+                        onChange={(event) => {
+                          handleInputChange("firstName", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.firstName)}
+                        helperText={validationErrors.firstName}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={1.5}>
+      <FormLabel component="legend">Last Name</FormLabel>
+      <TextField
+        id="lastname"
+        size="small"
+        fullWidth
+        required
+        variant="outlined"
+        value={leadData.lastName}
+        onChange={(event) => {
+          handleInputChange("lastName", event.target.value);
+        }}
+        error={Boolean(validationErrors.lastName)}
+        helperText={validationErrors.lastName}
+        InputProps={{
+          style: {
+            backgroundColor: '#f3f3f3', // Set the background color here
+          },
+        }}
+        // Apply styles to the input field itself
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#f3f3f3', // Optional: change the border color
+            },
+            '&:hover fieldset': {
+              borderColor: 'primary.main', // Optional: change the border color on hover
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'primary.main', // Optional: change the border color when focused
+            },
+          },
+        }}
+        // Remove the label prop from here to avoid redundancy
+      />
+    </Grid>
+                    {/* <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>Gender</FormLabel>
 
                       <TextField
-                        id="os_version"
+                        id="Gender"
                         size="small"
                         fullWidth
                         required
@@ -565,7 +611,7 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
+                    </Grid> */}
 
                     <Divider sx={{ borderStyle: "dashed" }} />
 
@@ -576,17 +622,17 @@ export default function EditLead(props) {
         }}>Status</FormLabel>
 
                       <TextField
-                        id="os_manufacturer"
+                        id="leadstatus"
                         size="small"
                         fullWidth
                         required
                         // label="Status"
-                        value={leadData.osmanufacturer}
+                        value={leadData.leadStatus}
                         onChange={(event) => {
-                          handleInputChange("osmanufacturer", event.target.value);
+                          handleInputChange("leadStatus", event.target.value);
                         }}
-                        error={Boolean(validationErrors.osconfiguration)}
-                        helperText={validationErrors.osconfiguration}
+                        error={Boolean(validationErrors.leadStatus)}
+                        helperText={validationErrors.leadStatus}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -608,45 +654,7 @@ export default function EditLead(props) {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" required= "true" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>First Name</FormLabel>
-
-                      <TextField
-                        id="os_build_type"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="First Name"
-                        value={leadData.osbuildtype}
-                        onChange={(event) => {
-                          handleInputChange("osbuildtype", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.osbuildtype)}
-                        helperText={validationErrors.osbuildtype}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
+                    
 
                     <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
@@ -655,17 +663,17 @@ export default function EditLead(props) {
         }}>Source</FormLabel>
 
                       <TextField
-                        id="registered_owner"
+                        id="source"
                         size="small"
                         fullWidth
                         required
                         // label="Source"
-                        value={leadData.registeredowner}
+                        value={leadData.source}
                         onChange={(event) => {
-                          handleInputChange("registeredowner", event.target.value);
+                          handleInputChange("source", event.target.value);
                         }}
-                        error={Boolean(validationErrors.registeredowner)}
-                        helperText={validationErrors.registeredowner}
+                        error={Boolean(validationErrors.source)}
+                        helperText={validationErrors.source}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -688,9 +696,8 @@ export default function EditLead(props) {
                       />
                     </Grid>
 
-                    <Divider sx={{ borderStyle: "dashed" }} />
 
-                    <Grid item xs={12} sm={4} md={4}>
+                    {/* <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -728,53 +735,12 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
+                    </Grid> */}
 
-                    <Grid item xs={12} sm={4} md={4}>
-                    
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Middle Name</FormLabel>
-
-                      <TextField
-                        id="systemmanufacturer"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Middle Name"
-                        value={leadData.systemmanufacturer}
-                        onChange={(event) => {
-                          handleInputChange("systemmanufacturer", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.systemmanufacturer)}
-                        helperText={validationErrors.systemmanufacturer}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12} sm={4} md={4}>
+                    {/* <Grid item xs={12} sm={4} md={4}>
                       
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    </Grid> */}
+                    {/* <Grid item xs={12} sm={4} md={4}>
                     <FormLabel 
         component="legend" 
         sx={{ 
@@ -816,58 +782,11 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
-                    {/* <Grid item xs={12} sm={4} md={4}>
-                      <TextField
-                        id="processor"
-                        size="small"
-                        fullWidth
-                        required
-                        label="Last Name"
-                        value={leadData.processor}
-                        onChange={(event) => {
-                          handleInputChange("processor", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.processor)}
-                        helperText={validationErrors.processor}
-                      />
                     </Grid> */}
-<Grid item xs={12} sm={4} md={4}>
-      <FormLabel component="legend">Last Name</FormLabel>
-      <TextField
-        id="processor"
-        size="small"
-        fullWidth
-        required
-        variant="outlined"
-        value={leadData.processor}
-        onChange={(event) => {
-          handleInputChange("processor", event.target.value);
-        }}
-        error={Boolean(validationErrors.processor)}
-        helperText={validationErrors.processor}
-        InputProps={{
-          style: {
-            backgroundColor: '#f3f3f3', // Set the background color here
-          },
-        }}
-        // Apply styles to the input field itself
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#f3f3f3', // Optional: change the border color
-            },
-            '&:hover fieldset': {
-              borderColor: 'primary.main', // Optional: change the border color on hover
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: 'primary.main', // Optional: change the border color when focused
-            },
-          },
-        }}
-        // Remove the label prop from here to avoid redundancy
-      />
-    </Grid>
+                    
+                    <Grid item xs={12} sm={4} md={4}>
+
+</Grid>
                     <Grid item xs={12} sm={4} md={4}>
 
                     </Grid>
@@ -876,50 +795,33 @@ export default function EditLead(props) {
                       
                     </Grid>
 
-              </Grid>
-            </Box>
-            </Container>
-          </TabPanel>
-        </TabContext>
-        <TabContext value={tabValue}>
-          <TabList
-            onChange={handleLeadTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-
-          <TabPanel value="1">
-          <Container maxWidth="x1">
-            <Box flexGrow={3}>
-              <Grid container spacing={3}>
-              <Grid item xs={12} sm={4} md={4}>
+                    <Grid item xs={12} sm={4} md={4}>
               <Typography sx={{ fontSize: '19.92px', fontWeight: 'bold', }}>Contact Info</Typography>
               </Grid>
               <Grid item xs={12} sm={4} md={4}>
                 </Grid>
               <Grid item xs={12} sm={4} md={4}>
                 </Grid>
-              
-                    <Grid item xs={12} sm={4} md={4}>
+
+
+                <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
         }}>Email</FormLabel>
 
                       <TextField
-                        id="lead_name"
+                        id="email"
                         size="small"
                         fullWidth
                         required
                         // label="Series"
-                        value={leadData.leadName}
+                        value={leadData.email}
                         onChange={(event) => {
-                          handleInputChange("leadName", event.target.value);
+                          handleInputChange("email", event.target.value);
                         }}
-                        error={Boolean(validationErrors.leadName)}
-                        helperText={validationErrors.leadName}
+                        error={Boolean(validationErrors.email)}
+                        helperText={validationErrors.email}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -949,17 +851,17 @@ export default function EditLead(props) {
         }}>Mobile No</FormLabel>
 
                       <TextField
-                        id="serial"
+                        id="mobile"
                         size="small"
                         fullWidth
                         required
                         // label="Job Title"
-                        value={leadData.serial}
+                        value={leadData.mobile}
                         onChange={(event) => {
-                          handleInputChange("serial", event.target.value);
+                          handleInputChange("mobile", event.target.value);
                         }}
-                        error={Boolean(validationErrors.serial)}
-                        helperText={validationErrors.serial}
+                        error={Boolean(validationErrors.mobile)}
+                        helperText={validationErrors.mobile}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -982,7 +884,7 @@ export default function EditLead(props) {
                       />
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4}>      
+                    {/* <Grid item xs={12} sm={4} md={4}>      
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -1019,8 +921,9 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    </Grid> */}
+
+                    {/* <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -1058,8 +961,8 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
+                    </Grid> */}
+                    {/* <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -1097,9 +1000,9 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
+                    </Grid> */}
 
-                    <Grid item xs={12} sm={4} md={4}>
+                    {/* <Grid item xs={12} sm={4} md={4}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
@@ -1137,248 +1040,58 @@ export default function EditLead(props) {
                           },
                         }}
                       />
-                    </Grid>
-                    
-              </Grid>
-            </Box>
-            </Container>
-          </TabPanel>
-        </TabContext>
-        <TabContext value={tabValue}>
-          <TabList
-            onChange={handleLeadTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-
-          <TabPanel value="1">
-          <Container maxWidth="x1">
-            <Box flexGrow={3}>
-              <Grid container spacing={3}>
-              <Grid item xs={12} sm={4} md={4}>
-              <Typography sx={{ fontSize: '19.92px', fontWeight: 'bold', }}>Organization</Typography>
-              </Grid>
-              <Grid item xs={12} sm={4} md={4}>
-                </Grid>
-              <Grid item xs={12} sm={4} md={4}>
-                </Grid>
-
+                    </Grid> */}
                     <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" required= "true" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Organization Name</FormLabel>
 
-                      <TextField
-                        id="lead_name"
-                        size="small"
-                        fullWidth
-                        required
-                        value={leadData.leadName}
-                        onChange={(event) => {
-                          handleInputChange("leadName", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.leadName)}
-                        helperText={validationErrors.leadName}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
+</Grid>
+                    <Grid item xs={12} sm={4} md={4}>
+
                     </Grid>
 
                     <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Annual Revenue</FormLabel>
-
-                      <TextField
-                        id="serial"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Job Title"
-                        value={leadData.serial}
-                        onChange={(event) => {
-                          handleInputChange("serial", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.serial)}
-                        helperText={validationErrors.serial}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
+                      
                     </Grid>
 
-                    <Grid item xs={12} sm={4} md={4}>      
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Territory</FormLabel>
-                      <TextField
-                        id="host_name"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Lead Owner"
-                        value={leadData.hostname}
-                        onChange={(event) => {
-                          handleInputChange("hostname", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.hostname)}
-                        helperText={validationErrors.hostname}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
+                    <Grid item xs={12} sm={4} md={6}>
+                      <Typography variant='h5'>Address & Details</Typography>
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                      <Typography></Typography>
                     </Grid>
                     <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>No of Employees</FormLabel>
 
-                      <TextField
-                        id="os_name"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Salutation"
-                        value={leadData.osname}
-                        onChange={(event) => {
-                          handleInputChange("osname", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.osname)}
-                        helperText={validationErrors.osname}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
+</Grid>
                     <Grid item xs={12} sm={4} md={4}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Industry</FormLabel>
 
-                      <TextField
-                        id="os_version"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Gender"
-                        value={leadData.osversion}
-                        onChange={(event) => {
-                          handleInputChange("osversion", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.osversion)}
-                        helperText={validationErrors.osversion}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
                     </Grid>
 
                     <Grid item xs={12} sm={4} md={4}>
+                      
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+                      <Typography variant='h6'>Shipping Address</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}><Typography variant='h6'>Primary Address</Typography></Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
-        }}>Fax</FormLabel>
+        }}>City</FormLabel>
 
                       <TextField
-                        id="os_manufacturer"
+                        id="shippingCity"
                         size="small"
                         fullWidth
                         required
                         // label="Status"
-                        value={leadData.osmanufacturer}
+                        value={leadData.shippingCity}
                         onChange={(event) => {
-                          handleInputChange("osmanufacturer", event.target.value);
+                          handleInputChange("shippingCity", event.target.value);
                         }}
-                        error={Boolean(validationErrors.osconfiguration)}
-                        helperText={validationErrors.osconfiguration}
+                        error={Boolean(validationErrors.shippingCity)}
+                        helperText={validationErrors.shippingCity}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -1400,26 +1113,64 @@ export default function EditLead(props) {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={4} md={4}>
-                </Grid>
-                <Grid item xs={12} sm={4} md={4}>
+
+                    <Grid item xs={12} sm={4} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
           // Add more styling as needed
-        }}>Market Segment</FormLabel>
+        }}>City</FormLabel>
 
                       <TextField
-                        id="os_version"
+                        id="city"
                         size="small"
                         fullWidth
                         required
-                        // label="Gender"
-                        value={leadData.osversion}
+                        // label="Status"
+                        value={leadData.city}
                         onChange={(event) => {
-                          handleInputChange("osversion", event.target.value);
+                          handleInputChange("city", event.target.value);
                         }}
-                        error={Boolean(validationErrors.osversion)}
-                        helperText={validationErrors.osversion}
+                        error={Boolean(validationErrors.city)}
+                        helperText={validationErrors.city}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>State/Region</FormLabel>
+
+                      <TextField
+                        id="shipping_state"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={leadData.shippingState}
+                        onChange={(event) => {
+                          handleInputChange("shippingState", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingState)}
+                        helperText={validationErrors.shippingState}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -1441,111 +1192,256 @@ export default function EditLead(props) {
                         }}
                       />
                     </Grid>
-                <Grid item xs={12} sm={4} md={4}>
-                </Grid>
-                    
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>State/Region</FormLabel>
+
+                      <TextField
+                        id="state"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={leadData.state}
+                        onChange={(event) => {
+                          handleInputChange("state", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.state)}
+                        helperText={validationErrors.state}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Pincode</FormLabel>
+
+                      <TextField
+                        id="shipping_postalcode"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={leadData.shippingPincode}
+                        onChange={(event) => {
+                          handleInputChange("shippingPincode", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingPincode)}
+                        helperText={validationErrors.shippingPincode}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Pincode</FormLabel>
+
+                      <TextField
+                        id="pincode"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={leadData.postalCode}
+                        onChange={(event) => {
+                          handleInputChange("postalCode", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.postalCode)}
+                        helperText={validationErrors.postalCode}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Country</FormLabel>
+
+                      <TextField
+                        id="shipping_country"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={leadData.shippingCountry}
+                        onChange={(event) => {
+                          handleInputChange("shippingCountry", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingCountry)}
+                        helperText={validationErrors.shippingCountry}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Country</FormLabel>
+
+                      <TextField
+                        id="country"
+                        size="small"
+                        fullWidth
+                        required
+                        // label="Status"
+                        value={leadData.country}
+                        onChange={(event) => {
+                          handleInputChange("country", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.country)}
+                        helperText={validationErrors.country}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={12} md={12}>
+  <FormLabel 
+    component="legend" 
+    sx={{ 
+      color: '#525252', // Set the color of the label here
+      // Add more styling as needed
+    }}
+  >
+    Description
+  </FormLabel>
+  <TextField
+    id="description"
+    multiline  // Add this to enable multiline input
+    rows={4}   // Adjust the number of rows as needed
+    fullWidth
+    required
+    value={leadData.description}
+    onChange={(event) => {
+      handleInputChange("description", event.target.value);
+    }}
+    error={Boolean(validationErrors.description)}
+    helperText={validationErrors.description}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    // Apply styles to the input field itself
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+</Grid>
+
               </Grid>
             </Box>
             </Container>
           </TabPanel>
         </TabContext>
-        <TabContext value={tabValue}>
-          <TabList
-            onChange={handleLeadTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-
-          <TabPanel value="1">
-          <Container maxWidth="x1">
-            <Box flexGrow={3}>
-              <Grid container spacing={3}>
-              <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-          >
-              <Typography sx={{ fontSize: '19.92px', fontWeight: 'bold', }}>Address & Contacts</Typography>
-         </AccordionSummary>
-        <AccordionDetails>
-       
-        </AccordionDetails>
-      </Accordion>
-            
-              </Grid>
-            </Box>
-            </Container>
-          </TabPanel>
-        </TabContext>
-
-        <TabContext value={tabValue}>
-          <TabList
-            onChange={handleLeadTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-
-          <TabPanel value="1">
-          <Container maxWidth="x1">
-            <Box flexGrow={3}>
-              <Grid container spacing={3}>
-              <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-          >
-              <Typography sx={{ fontSize: '19.92px', fontWeight: 'bold', }}>Qualification</Typography>
-         </AccordionSummary>
-        <AccordionDetails>
-       
-        </AccordionDetails>
-      </Accordion>
-            
-              </Grid>
-            </Box>
-            </Container>
-          </TabPanel>
-        </TabContext>
-        
-
-        <TabContext value={tabValue}>
-          <TabList
-            onChange={handleLeadTabChange}
-            aria-label="lab API tabs example"
-            sx={{ borderRadius: "10px 10px 0px 0px" }}
-          >
-          </TabList>
-          <Divider sx={{ borderStyle: "fill" }} />
-
-          <TabPanel value="1">
-          <Container maxWidth="x1">
-            <Box flexGrow={3}>
-              <Grid container spacing={3}>
-              <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-          >
-              <Typography sx={{ fontSize: '19.92px', fontWeight: 'bold', }}>Additional Information</Typography>
-         </AccordionSummary>
-        <AccordionDetails>
-       
-        </AccordionDetails>
-      </Accordion>
-            
-              </Grid>
-            </Box>
-            </Container>
-          </TabPanel>
-        </TabContext>
-
       </Dialog>
     </>
   );

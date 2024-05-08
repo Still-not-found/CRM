@@ -51,7 +51,7 @@ export default function DeleteOpportunity(props){
 
     const handleDeleteOpportunity = async ()=>{
         try {
-            await axios.delete(`${API_URL}/api/opportunitys/${idToDelete}`).then((response)=>{
+            await axios.delete(`${API_URL}/api/opportunities/${idToDelete}`).then((response)=>{
                 if(response.data.status){
                   setStatus({
                     open:true,

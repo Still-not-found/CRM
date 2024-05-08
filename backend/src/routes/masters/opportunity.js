@@ -32,15 +32,15 @@ router.post("/upload/single", uploadStorage.single('file'), (req, res)  => {
   return res.send("Single file")
 });
 router.route('/opportunity_list')
-  .get(opportunityController.getAllOpportunitys);
+  .get(opportunityController.getAllOpportunities);
   
 router
-  .route("/opportunitys")
-  .get(opportunityController.getAllOpportunitysWithMappedData)
+  .route("/opportunities")
+  .get(opportunityController.getAllOpportunitiesWithMappedData)
   .post(validation.createOpportunity, opportunityController.createOpportunity);
 
 router
-  .route("/opportunitys/:opportunities_id")
+  .route("/opportunities/:opportunities_id")
   .get(opportunityController.getOpportunityByOpportunityIdWithMappedData)
   .put(validation.updateOpportunity, opportunityController.updateOpportunityByOpportunityId)
   .delete(opportunityController.deleteOpportunityByOpportunityId);

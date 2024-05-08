@@ -40,7 +40,7 @@ router
   .post(validation.createAccount, accountController.createAccount);
 
 router
-  .route("/accounts/:account_id")
+  .route("/accounts/:acc_id")
   .get(accountController.getAccountByAccountIdWithMappedData)
   .put(validation.updateAccount, accountController.updateAccountByAccountId)
   .delete(accountController.deleteAccountByAccountId);

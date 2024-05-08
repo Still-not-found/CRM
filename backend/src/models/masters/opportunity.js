@@ -6,7 +6,7 @@ const opportunity={
         const [rows] = await db.query(`INSERT INTO ${table} SET ?`,opportunityData);
         return rows;
     },
-    getAllOpportunitys: async () => {
+    getAllOpportunities: async () => {
         const [rows, fields] = await db.query(`SELECT * FROM ${table} ;`);
         return rows;
       },
@@ -18,7 +18,7 @@ const opportunity={
         return rows;
       },
 
-    getAllOpportunitysWithMappedData: async ()=>{
+    getAllOpportunitiesWithMappedData: async ()=>{
         const [rows, fields] = await db.query(`SELECT id, opportunities_id, lead_id, user_id, name, description, value, stage, probability, expected_close_date, account_id, opportunity_amount, type, lead_source, sales_stage, assigned_to, updated_by, created_by FROM opportunities ;`);
         return rows;
     },
