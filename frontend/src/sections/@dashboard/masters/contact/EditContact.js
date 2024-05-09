@@ -66,6 +66,7 @@ export default function EditContact(props) {
   const [tabValue, setTabValue] = useState("1");
   const [contactData, setContactData] = useState({
     contactName: "",
+    CStatus: null,
     account: null, 
     middelName: null, 
     designation: null, 
@@ -217,10 +218,11 @@ export default function EditContact(props) {
       try {
         await axios.get(`${API_URL}/api/contacts/${idToEdit}`).then((response) => {
           if (response.data.status) {
-            const { middle_name, salutation, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to } = response.data.results[0];
+            const { middle_name, salutation, c_status, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to } = response.data.results[0];
             setContactData({
               contactName: first_name,
               account: account_id, 
+              CStatus: c_status,
               middelName: middle_name, 
               designation: designation, 
               gender: gender, 
@@ -505,12 +507,12 @@ export default function EditContact(props) {
                         fullWidth
                         required
                         // label="Job Title"
-                        value={contactData.officePhone}
+                        value={contactData.CStatus}
                         onChange={(event) => {
-                          handleInputChange("officePhone", event.target.value);
+                          handleInputChange("CStatus", event.target.value);
                         }}
-                        error={Boolean(validationErrors.officePhone)}
-                        helperText={validationErrors.officePhone}
+                        error={Boolean(validationErrors.CStatus)}
+                        helperText={validationErrors.CStatus}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here
@@ -585,20 +587,20 @@ export default function EditContact(props) {
           // Add more styling as needed
         }}
       >
-        Office Phone
+        Email
       </FormLabel>
                       <TextField
-                        id="office phone"
+                        id="email"
                         size="small"
                         fullWidth
                         required
                         // label="Request Type"
-                        value={contactData.officePhone}
+                        value={contactData.email}
                         onChange={(event) => {
-                          handleInputChange("officePhone", event.target.value);
+                          handleInputChange("email", event.target.value);
                         }}
-                        error={Boolean(validationErrors.officePhone)}
-                        helperText={validationErrors.officePhone}
+                        error={Boolean(validationErrors.email)}
+                        helperText={validationErrors.email}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here

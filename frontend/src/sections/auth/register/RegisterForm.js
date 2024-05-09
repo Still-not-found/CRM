@@ -98,7 +98,7 @@ return (
   >
     <Typography component="h1" variant="h5" my={1}>
       <img
-        src="https://suitecrm.refex.group/ITAM.png"
+        src="/assets/background/logo.png"
         alt="logo"
         height={100}
       />

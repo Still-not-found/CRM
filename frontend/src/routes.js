@@ -48,6 +48,11 @@ import SmartphoneViewPage from './pages/QRPages/SmartPhoneViewPage';
 import PrinterViewPage from './pages/QRPages/PrinterViewPage';
 import  RouterViewPage from './pages/QRPages/RouterViewPage';
 import  ServerViewPage from './pages/QRPages/ServerViewPage';
+import LeadViewPage from './pages/QRPages/LeadViewPage';
+import OpportunityViewPage from './pages/QRPages/OpportunityViewPage';
+import ContactViewPage from './pages/QRPages/ContactViewPage';
+import AccountViewPage from './pages/QRPages/AccountViewPage';
+
 // Masters -----------------------------------------------------
 
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -122,6 +127,23 @@ export default function Router({DB_URL}) {
       path: '/computer_detail/:computerId',
       element: <ComputerViewPage  />,
     },
+    {
+      path: '/account_detail/:accountId',
+      element: <AccountViewPage  />,
+    },
+    {
+      path: '/contact_detail/:contactId',
+      element: <ContactViewPage  />,
+    },
+    {
+      path: '/opportunity_detail/:opportunityId',
+      element: <OpportunityViewPage  />,
+    },
+    {
+      path: '/lead_detail/:leadId',
+      element: <LeadViewPage  />,
+    },
+
     {
       path: '/accesspoint_detail/:accesspointId',
       element: <AccesspointViewPage />,

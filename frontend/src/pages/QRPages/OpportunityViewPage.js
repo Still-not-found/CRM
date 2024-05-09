@@ -15,6 +15,8 @@ import {
   TextField,
   Typography,
   styled,
+  Container,
+  FormLabel,
   Autocomplete,
   Tooltip
 } from "@mui/material";
@@ -60,24 +62,21 @@ const {opportunityId}= useParams();
   const { handleTabChange, userData } = props;
   const [tabValue, setTabValue] = useState("1");
   const [opportunityData, setOpportunityData] = useState({
-    opportunity: "",
-    assignedQty: "",
-     location: "", 
-     company:"", 
-     orderNumber:"", 
-     purchaseDate:"",
-      purchaseCost:"", 
-      serialNo: "", 
-      modelNo: "", 
-      manufacturer: "", 
-      department: "", 
-      supplier: "", 
-      ipAddress: "", 
-      macAddress: "", 
-      networkName: "", 
-      opportunitystatus: "", 
-      inktonerType: "", 
-  });
+    Name: "",
+    lead: "",
+    description:  "",
+    value: "",
+    stage: "",
+    probability: "",
+    expectedCloseDate: "",
+    account: "",
+    opportunityAmount: "",
+    type: "",
+    user: "",
+    leadSource: "",
+    salesStage: "",
+    assignedTo: "",
+});
   // const [blobUrl, setBlobUrl]=useState('');
 
   const handleOpportunityTabChange = (event, newValue) => {
@@ -134,45 +133,25 @@ const {opportunityId}= useParams();
 
     const fetchData = async () => {
       try {
-        await axios.get(`${API_URL}/api/opportunitys/${opportunityId}`).then((response) => {
+        await axios.get(`${API_URL}/api/opportunities/${opportunityId}`).then((response) => {
           if (response.data.status) {
-            const { opportunity_name,
-              assigned_qty,
-              location,
-              company,
-              order_number,
-              purchase_cost,
-              serial_no,
-              model_no,
-              manufacturer,
-              department,
-              supplier,
-              ip_address,
-              mac_address,
-              network_name,
-              status_id,
-              inktoner_type,} = response.data.results[0];
-            setOpportunityData({
-              opportunity: opportunity_name,
-              assignedQty: assigned_qty,
-              location: location,
-              company: company,
-              location: location,
-              company: company,
-              orderNumber: order_number,
-              purchaseCost: purchase_cost,
-              serialNo: serial_no,
-              modelNo: model_no,
-              manufacturer: manufacturer,
-              department: department,
-              supplier: supplier,
-              ipAddress: ip_address,
-              macAddress: mac_address,
-              networkName: network_name,
-              opportunitystatus: status_id,
-              inktonerType: inktoner_type,
-
-            });
+            const { opportunities_id, lead_id, user_id, name, description, value, stage, probability, expected_close_date, account_id, opportunity_amount, type, lead_source, sales_stage, assigned_to, updated_by, created_by } = response.data.results[0];
+                        setOpportunityData({
+                       Name: name,
+                       lead: lead_id,
+                       description: description,
+                       value: value,
+                       stage: stage,
+                       probability: probability,
+                       expectedCloseDate: dayjs(expected_close_date),
+                       account: account_id,
+                       opportunityAmount: opportunity_amount,
+                       type: type,
+                       user: user_id,
+                       leadSource: lead_source,
+                       salesStage: sales_stage,
+                       assignedTo: assigned_to,
+                       });
           }
         }).catch((error) => {
           // setOpportunityData({});
@@ -257,8 +236,8 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
   const validate = () => {
     let errors = {};
 
-    if (!Boolean(opportunityData.opportunityName))
-      errors.opportunityName = "Opportunity Name is required";
+    if (!Boolean(opportunityData.Name))
+      errors.Name = "Opportunity Name is required";
 
 
     return errors;
@@ -267,19 +246,19 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
   return (
     <>
       <Helmet>
-        <title>Opportunity View | IT Asset Management</title>
+        <title>Opportunity View | CRM</title>
       </Helmet>
 
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="xl"
         open={true}
         TransitionComponent={Transition}
         keepMounted
         // onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{opportunityData.opportunityName}</DialogTitle>
+        <DialogTitle>{opportunityData.Name}</DialogTitle>
        
         <Button variant="contained" color="error" onClick={handleClose} sx={{
           position: 'absolute',
@@ -295,461 +274,468 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="Opportunity" value="1" />
-            <Tab label="Order Related Info" value="2" />
-            <Tab label="Asset QR" value="3" />
+            <Tab label="" value="1" sx={{ fontSize: '18.92px', }}  />
+
           </TabList>
-          <Divider sx={{ borderStyle: "dashed" }} />
+          
+          <Divider sx={{ borderStyle: "fill" }} />
           <TabPanel value="1">
-
-            <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={{ xs: 1, md: 3 }}
-                    columns={{ xs: 12, md: 7 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-
+          <Container maxWidth="x1">
+            <Box flexGrow={3}>
+              <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ color: '#525252',}}>Name</FormLabel>
                       <TextField
                         id="opportunity_name"
                         size="small"
                         fullWidth
+                        disabled
+                        // label="Series"
+                        value={opportunityData.Name}
+                        onChange={(event) => {
+                          handleInputChange("Name", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.Name)}
+                        helperText={validationErrors.Name}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Account</FormLabel>
+
+                      <TextField
+                        id="account"
+                        size="small"
+                        fullWidth
                         required
                         disabled
-                        label="Opportunity Name"
-                        value={opportunityData.opportunity}
+                        // label="Job Title"
+                        value={opportunityData.account}
                         onChange={(event) => {
-                          handleInputChange("opportunity", event.target.value);
+                          handleInputChange("account", event.target.value);
                         }}
-                        error={Boolean(validationErrors.opportunity)}
-                        helperText={validationErrors.opportunity}
+                        error={Boolean(validationErrors.account)}
+                        helperText={validationErrors.account}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
 
-                    {/* <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Sales Stage</FormLabel>
                       <TextField
-                        id="assignedqty"
+                        id="salesstage"
                         size="small"
                         fullWidth
                         disabled
-                        label="Qty"
-                        value={opportunityData.assignedQty}
+                        // label="First Name"
+                        value={opportunityData.salesStage}
                         onChange={(event) => {
-                          handleInputChange("assignedQty", event.target.value);
+                          handleInputChange("salesStage", event.target.value);
                         }}
-                        error={Boolean(validationErrors.assignedQty)}
-                        helperText={validationErrors.assignedQty}
+                        error={Boolean(validationErrors.salesStage)}
+                        helperText={validationErrors.salesStage}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
-                    </Grid> */}
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>      
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Opportunity Amount</FormLabel>
+                      <TextField
+                        id="opportunity_amount"
+                        size="small"
+                        fullWidth
+                        disabled
+                        // label="Opportunity Owner"
+                        value={opportunityData.opportunityAmount}
+                        onChange={(event) => {
+                          handleInputChange("opportunityAmount", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.opportunityAmount)}
+                        helperText={validationErrors.opportunityAmount}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Probability</FormLabel>
+
+                      <TextField
+                        id="probability"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Source"
+                        value={opportunityData.probability}
+                        onChange={(event) => {
+                          handleInputChange("probability", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.probability)}
+                        helperText={validationErrors.probability}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+  <FormLabel component="legend" sx={{ 
+    color: '#525252', // Set the color of the label here
+    // Add more styling as needed
+  }}>Expected Close Date</FormLabel>
+  <LocalizationProvider
+    id="expectedcloseddate"
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+      
+    }}
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+    dateAdapter={AdapterDayjs}>
+    <DemoContainer disabled="true" components={['DatePicker']}>
+      <DatePicker
+        format="DD/MM/YYYY"
+        // label="Purchase Date" 
+        onChange={(newValue) =>
+          handleInputChange(
+            "expectedCloseDate",
+            dayjs(newValue.$d).format("YYYY-MM-DD")
+          )
+        }
+       
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            size: "small"
+          }
+        }}
+      />
+    </DemoContainer>
+  </LocalizationProvider>
+</Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Contact</FormLabel>
+
+                      <TextField
+                        id="type"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Gender"
+                        value={opportunityData.contact}
+                        onChange={(event) => {
+                          handleInputChange("contact", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.contact)}
+                        helperText={validationErrors.contact}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Divider sx={{ borderStyle: "dashed" }} />
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Lead Source</FormLabel>
+
+                      <TextField
+                        id="leadsource"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Status"
+                        value={opportunityData.leadSource}
+                        onChange={(event) => {
+                          handleInputChange("leadSource", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.leadSource)}
+                        helperText={validationErrors.leadSource}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
                    
-              
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Type</FormLabel>
 
-                    <Grid item xs={4} sm={12} md={12}>
                       <TextField
-                        id="serialno"
+                        id="type"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="Serial No"
-                        value={opportunityData.serialNo}
+                        // label="Gender"
+                        value={opportunityData.type}
                         onChange={(event) => {
-                          handleInputChange("serialNo", event.target.value);
+                          handleInputChange("type", event.target.value);
                         }}
-                        error={Boolean(validationErrors.serialNo)}
-                        helperText={validationErrors.serialNo}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="model"
-                        size="small"
-                        fullWidth
-                        
-                        disabled
-                        label="Model"
-                        value={opportunityData.modelNo}
-                        onChange={(event) => {
-                          handleInputChange("modelNo", event.target.value);
+                        error={Boolean(validationErrors.type)}
+                        helperText={validationErrors.type}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
                         }}
-                        error={Boolean(validationErrors.modelNo)}
-                        helperText={validationErrors.modelNo}
-                      />
-                    </Grid>
-                  
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="ipaddress"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="IP Address"
-                        value={opportunityData.ipAddress}
-                        onChange={(event) => {
-                          handleInputChange("ipAddress", event.target.value);
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
                         }}
-                        error={Boolean(validationErrors.ipAddress)}
-                        helperText={validationErrors.ipAddress}
-                      />
-                    </Grid>
-             
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="manufacturer"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Manufacturer"
-                        value={opportunityData.manufacturer}
-                        onChange={(event) => {
-                          handleInputChange("manufacturer", event.target.value);
-                        }}
-
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="department"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Department"
-                        value={opportunityData.department}
-                        onChange={(event) => {
-                          handleInputChange("department", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.department)}
-                        helperText={validationErrors.department}
                       />
                     </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Assigned To</FormLabel>
+
                       <TextField
-                        id="macAddress"
+                        id="type"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="MAC Address"
-                        value={opportunityData.macAddress}
+                        // label="Gender"
+                        value={opportunityData.assignedTo}
                         onChange={(event) => {
-                          handleInputChange("macAddress", event.target.value);
+                          handleInputChange("assignedTo", event.target.value);
                         }}
-                        error={Boolean(validationErrors.macAddress)}
-                        helperText={validationErrors.macAddress}
+                        error={Boolean(validationErrors.assignedTo)}
+                        helperText={validationErrors.assignedTo}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="networkName"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Network"
-                        value={opportunityData.networkName}
-                        onChange={(event) => {
-                          handleInputChange("networkName", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.networkName)}
-                        helperText={validationErrors.networkName}
-                      />
-                    </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="inktonerType"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Type"
-                        value={opportunityData.inktonerType}
-                        onChange={(event) => {
-                          handleInputChange("inktonerType", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.inktonerType)}
-                        helperText={validationErrors.inktonerType}
-                      />
-                    </Grid>
-                                    
-                  </Grid>
-                </Grid>
-
+                    <Grid item xs={12} sm={12} md={12}>
+  <FormLabel component="legend" sx={{ color: '#525252',}}>Description</FormLabel>
+  <TextField
+    id="description"
+    multiline  // Add this to enable multiline input
+    rows={4}   // Adjust the number of rows as needed
+    fullWidth
+    required
+    disabled
+    value={opportunityData.description}
+    onChange={(event) => {
+      handleInputChange("description", event.target.value);
+    }}
+    error={Boolean(validationErrors.description)}
+    helperText={validationErrors.description}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+</Grid>
               </Grid>
             </Box>
+            </Container>
           </TabPanel>
-
-          
-          <TabPanel value="2">
-            <Box flexGrow={1}>
-              <Grid container spacing={3}>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider
-                    id="purchasedate"
-                    
-                    dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Purchase Date" disabled="true" slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      id="warrenty"
-                      
-
-                      components={['DatePicker']}>
-                      <DatePicker label="Warrenty EOL" disabled="true"  slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                          
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="purchaseCost"
-                    size="small"
-                    fullWidth
-                    disabled
-                    label="Purchase Cost"
-                    value={opportunityData.purchaseCost}
-                    onChange={(event) => {
-                      handleInputChange("purchaseCost", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.purchaseCost)}
-                    helperText={validationErrors.purchaseCost}
-                  />
-
-                </Grid>
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="orderNumber"
-                    size="small"
-                    fullWidth
-                    disabled
-                    label="Order Number"
-                    value={opportunityData.orderNumber}
-                    onChange={(event) => {
-                      handleInputChange("orderNumber", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.orderNumber)}
-                    helperText={validationErrors.orderNumber}
-                  />
-
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                      <Autocomplete
-                        fullWidth
-                        disabled
-                        size="small"
-                        value={
-                          companies.find(
-                            (_company) =>
-                              _company.company_id === opportunityData.company
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("company", newValue.company_id);
-                          } else {
-                            handleInputChange("company", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.company_code}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        options={companies}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            
-                            label="Billed Entity"
-                          
-                          />
-                        )}
-                      />
-                    </Grid>
-                   
-                  </Grid>
-                </Grid>                
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={1}
-                    columns={{ xs: 4, sm: 12, md: 3.5 }}
-                  >
-                    <Grid item xs={10} sm={12} md={12}>
-                      <Autocomplete
-                      disabled
-                        value={
-                          suppliers.find(
-                            (_supplier) =>
-                              _supplier.supplier_id === opportunityData.supplier
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("supplier", newValue.supplier_id);
-                          } else {
-                            handleInputChange("supplier", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        size="small"
-                        options={suppliers}
-                        renderInput={(params) => (
-                          <TextField
-                           
-                            {...params}
-                            label="Supplier"
-                          />
-                        )}
-                      />
-                    </Grid>
-                  
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={1}
-                    columns={{ xs: 4, sm: 12, md: 3.5 }}
-                  >
-                    <Grid item xs={10} sm={12} md={12}>
-                      <Autocomplete
-                     disabled
-                        value={
-                          locations.find(
-                            (_location) =>
-                              _location.location_id === opportunityData.location
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("location", newValue.location_id);
-                          } else {
-                            handleInputChange("location", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        size="small"
-                        options={locations}
-                        renderInput={(params) => (
-                          <TextField
-                           
-                            {...params}
-                            label="Location"
-                          />
-                        )}
-                      />
-                    </Grid>
-                  
-                  </Grid>
-                </Grid>
-                
-                <Grid item xs={4} sm={12} md={12}>
-                        <Grid
-                          container
-                          spacing={1}
-                          columns={{ xs: 4, sm: 12, md: 3.5}}
-                        >
-                          <Grid item xs={10} sm={12} md={12}>
-                            <Autocomplete
-                            disabled
-                              value={
-                                assetstatus.find(
-                                  (_assetStatus) =>
-                                    _assetStatus.status_id === opportunityData.opportunitystatus
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("opportunitystatus", newValue.status_id);
-                                } else {
-                                  handleInputChange("opportunitystatus", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.status_name}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={assetstatus}
-                              renderInput={(params) => (
-                                <TextField
-                                
-                                  {...params}
-                                  label="Status"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          
-                        </Grid>
-                      </Grid>
-
-              </Grid>
-
-            </Box>
-
-          </TabPanel>
-          
-          <TabPanel value="3">
-          <Box flexGrow={1}>
-      <Grid container columnSpacing={3} justifyContent="center">
-        <Grid item>
-          <QRCode id="qr-code" value={`http://localhost:3000/opportunity_detail/${opportunityId}`} />
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => downloadQR(opportunityData.opportunity)}>Download QR</Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={()=>printQR(opportunityData.opportunity)}>Print QR</Button>
-        </Grid>
-      </Grid>
-    </Box>
-            {/* <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                
-              <QRCode value={`http://localhost:3000/opportunity_detail/${opportunityId}`}/>
-              </Grid>
-            </Box> */}
-          </TabPanel>
-          
+          <Divider sx={{ borderStyle: "dashed" }} />
+         
         </TabContext>
 
       </Dialog>

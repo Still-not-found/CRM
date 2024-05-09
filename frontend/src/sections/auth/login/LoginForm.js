@@ -118,7 +118,7 @@ return (
   </Avatar> */}
     <Typography component="h1" variant="h5">
       <img
-        src="https://suitecrm.refex.group/itam.png"
+        src="/assets/background/logo.png"
         alt="logo"
         height={100}
       />

@@ -23,9 +23,10 @@ function Login({ setIsLoggedIn}) {
           xs={false}
           sm={8}
           md={8.1}
+          
           sx={{
             backgroundImage:
-              "url('https://suitecrm.refex.group/crm1.jpg')", //url(https://source.unsplash.com/random?wallpapers)
+              "url('/assets/background/bg.jpg')", //url(https://source.unsplash.com/random?wallpapers)
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "primary"

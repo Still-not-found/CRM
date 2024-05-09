@@ -30,9 +30,7 @@ const Main = styled('div')(({ theme }) => ({
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 10,
   // paddingBottom: theme.spacing(10),
-
   ...bgGradient({
-    // color: alpha(theme.palette.background.default, 0.9),
     color: "#ffffff",
     imgUrl: '/assets/background/Background.png'
   }),
@@ -50,7 +48,7 @@ export default function DashboardLayout({userData}) {
   const [open, setOpen] = useState(false);
   const [navBarLapOpen, setNavBarLapOpen]=useState(false);
   const theme = useTheme();
-
+  
   return (
     <StyledRoot>
       

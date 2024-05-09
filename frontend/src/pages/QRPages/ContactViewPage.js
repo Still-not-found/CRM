@@ -15,6 +15,8 @@ import {
   TextField,
   Typography,
   styled,
+  Container,
+  FormLabel,
   Autocomplete,
   Tooltip
 } from "@mui/material";
@@ -60,23 +62,31 @@ const {contactId}= useParams();
   const { handleTabChange, userData } = props;
   const [tabValue, setTabValue] = useState("1");
   const [contactData, setContactData] = useState({
-    contact: "",
-    assignedQty: "",
-     location: "", 
-     company:"", 
-     orderNumber:"", 
-     purchaseDate:"",
-      purchaseCost:"", 
-      serialNo: "", 
-      modelNo: "", 
-      manufacturer: "", 
-      department: "", 
-      supplier: "", 
-      ipAddress: "", 
-      macAddress: "", 
-      networkName: "", 
-      contactstatus: "", 
-      inktonerType: "", 
+    contactName: "",
+    CStatus: "",
+    account: "", 
+    middelName: "", 
+    designation: "", 
+    gender: "", 
+    salutation: "", 
+    companyName: "", 
+    lead: "", 
+    lastName: "",
+    leadSource: "", 
+    reportsTo: "", 
+    description: "", 
+    fax: "", 
+    mobile: "", 
+    department: "", 
+    jobTitle: "", 
+    email: "", 
+    address: "", 
+    city: "", 
+    state: "", 
+    postalCode: "", 
+    country: "", 
+    officePhone: "", 
+    // modifiedBy, createdBy
   });
   // const [blobUrl, setBlobUrl]=useState('');
 
@@ -136,42 +146,32 @@ const {contactId}= useParams();
       try {
         await axios.get(`${API_URL}/api/contacts/${contactId}`).then((response) => {
           if (response.data.status) {
-            const { contact_name,
-              assigned_qty,
-              location,
-              company,
-              order_number,
-              purchase_cost,
-              serial_no,
-              model_no,
-              manufacturer,
-              department,
-              supplier,
-              ip_address,
-              mac_address,
-              network_name,
-              status_id,
-              inktoner_type,} = response.data.results[0];
+            const { middle_name, salutation, c_status, designation, gender, company_name, contact_id, account_id, lead_id, first_name, last_name, email, office_phone, job_title, department, mobile, fax, address, city, state, postal_code, country, description, lead_source, reports_to } = response.data.results[0];
             setContactData({
-              contact: contact_name,
-              assignedQty: assigned_qty,
-              location: location,
-              company: company,
-              location: location,
-              company: company,
-              orderNumber: order_number,
-              purchaseCost: purchase_cost,
-              serialNo: serial_no,
-              modelNo: model_no,
-              manufacturer: manufacturer,
-              department: department,
-              supplier: supplier,
-              ipAddress: ip_address,
-              macAddress: mac_address,
-              networkName: network_name,
-              contactstatus: status_id,
-              inktonerType: inktoner_type,
-
+              contactName: first_name,
+              account: account_id, 
+              CStatus: c_status,
+              middelName: middle_name, 
+              designation: designation, 
+              gender: gender, 
+              salutation: salutation, 
+              companyName: company_name, 
+              lead: lead_id, 
+              lastName: last_name, 
+              leadSource: lead_source, 
+              reportsTo: reports_to, 
+              description: description, 
+              fax: fax, 
+              mobile: mobile, 
+              department: department, 
+              jobTitle: job_title, 
+              email: email, 
+              address: address, 
+              city: city, 
+              state: state, 
+              postalCode: postal_code, 
+              country: country, 
+              officePhone: office_phone, 
             });
           }
         }).catch((error) => {
@@ -267,12 +267,12 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
   return (
     <>
       <Helmet>
-        <title>Contact View | IT Asset Management</title>
+        <title>Contact View | CRM</title>
       </Helmet>
 
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="xl"
         open={true}
         TransitionComponent={Transition}
         keepMounted
@@ -295,461 +295,851 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="Contact" value="1" />
-            <Tab label="Order Related Info" value="2" />
-            <Tab label="Asset QR" value="3" />
-          </TabList>
-          <Divider sx={{ borderStyle: "dashed" }} />
-          <TabPanel value="1">
+            <Tab label="" value="1" sx={{ fontSize: '18.92px', }}  />
 
-            <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={{ xs: 1, md: 3 }}
-                    columns={{ xs: 12, md: 7 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
+          </TabList>
+          
+          <Divider sx={{ borderStyle: "fill" }} />
+          <TabPanel value="1">
+          <Container maxWidth="l">
+            <Box flexGrow={2}>
+              <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={6}>
+                <Typography variant="h5">Overview</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6}>
+                </Grid>
+
+                <Grid item xs={12} sm={4} md={1}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>salutation</FormLabel>
 
                       <TextField
-                        id="contact_name"
+                        id="salutation"
                         size="small"
                         fullWidth
                         required
                         disabled
-                        label="Contact Name"
-                        value={contactData.contact}
+                        // label="Salutation"
+                        value={contactData.salutation}
                         onChange={(event) => {
-                          handleInputChange("contact", event.target.value);
+                          handleInputChange("salutation", event.target.value);
                         }}
-                        error={Boolean(validationErrors.contact)}
-                        helperText={validationErrors.contact}
+                        error={Boolean(validationErrors.salutation)}
+                        helperText={validationErrors.salutation}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
 
-                    {/* <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={6} md={2.5}>
+                    <FormLabel component="legend" sx={{ color: '#525252',}}>First Name</FormLabel>
                       <TextField
-                        id="assignedqty"
+                        id="fn"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="Qty"
-                        value={contactData.assignedQty}
+                        // label="Series"
+                        value={contactData.contactName}
                         onChange={(event) => {
-                          handleInputChange("assignedQty", event.target.value);
+                          handleInputChange("accName", event.target.value);
                         }}
-                        error={Boolean(validationErrors.assignedQty)}
-                        helperText={validationErrors.assignedQty}
+                        error={Boolean(validationErrors.accName)}
+                        helperText={validationErrors.accName}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
-                    </Grid> */}
-                   
-              
+                    </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="serialno"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Serial No"
-                        value={contactData.serialNo}
-                        onChange={(event) => {
-                          handleInputChange("serialNo", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.serialNo)}
-                        helperText={validationErrors.serialNo}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="model"
-                        size="small"
-                        fullWidth
-                        
-                        disabled
-                        label="Model"
-                        value={contactData.modelNo}
-                        onChange={(event) => {
-                          handleInputChange("modelNo", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.modelNo)}
-                        helperText={validationErrors.modelNo}
-                      />
-                    </Grid>
-                  
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="ipaddress"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="IP Address"
-                        value={contactData.ipAddress}
-                        onChange={(event) => {
-                          handleInputChange("ipAddress", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.ipAddress)}
-                        helperText={validationErrors.ipAddress}
-                      />
-                    </Grid>
-             
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="manufacturer"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Manufacturer"
-                        value={contactData.manufacturer}
-                        onChange={(event) => {
-                          handleInputChange("manufacturer", event.target.value);
-                        }}
+                    <Grid item xs={12} sm={4} md={2.5}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Last Name</FormLabel>
 
+                      <TextField
+                        id="lastname"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Gender"
+                        value={contactData.lastName}
+                        onChange={(event) => {
+                          handleInputChange("lastName", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.lastName)}
+                        helperText={validationErrors.lastName}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
+                    
+
+                    <Grid item xs={12} sm={6} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Status</FormLabel>
+
+                      <TextField
+                        id="office_phone"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Job Title"
+                        value={contactData.CStatus}
+                        onChange={(event) => {
+                          handleInputChange("CStatus", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.CStatus)}
+                        helperText={validationErrors.CStatus}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Mobile
+      </FormLabel>
+                      <TextField
+                        id="mobile"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.mobile}
+                        onChange={(event) => {
+                          handleInputChange("mobile", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.mobile)}
+                        helperText={validationErrors.mobile}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Email
+      </FormLabel>
+                      <TextField
+                        id="email"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.email}
+                        onChange={(event) => {
+                          handleInputChange("email", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.email)}
+                        helperText={validationErrors.email}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Department
+      </FormLabel>
                       <TextField
                         id="department"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="Department"
+                        // label="Request Type"
                         value={contactData.department}
                         onChange={(event) => {
                           handleInputChange("department", event.target.value);
                         }}
                         error={Boolean(validationErrors.department)}
                         helperText={validationErrors.department}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Designation</FormLabel>
+
                       <TextField
-                        id="macAddress"
+                        id="desig"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="MAC Address"
-                        value={contactData.macAddress}
+                        // label="Status"
+                        value={contactData.designation}
                         onChange={(event) => {
-                          handleInputChange("macAddress", event.target.value);
+                          handleInputChange("designation", event.target.value);
                         }}
-                        error={Boolean(validationErrors.macAddress)}
-                        helperText={validationErrors.macAddress}
+                        error={Boolean(validationErrors.designation)}
+                        helperText={validationErrors.designation}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Job Title
+      </FormLabel>
                       <TextField
-                        id="networkName"
+                        id="jobtitle"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="Network"
-                        value={contactData.networkName}
+                        // label="Request Type"
+                        value={contactData.jobTitle}
                         onChange={(event) => {
-                          handleInputChange("networkName", event.target.value);
+                          handleInputChange("jobTitle", event.target.value);
                         }}
-                        error={Boolean(validationErrors.networkName)}
-                        helperText={validationErrors.networkName}
+                        error={Boolean(validationErrors.jobTitle)}
+                        helperText={validationErrors.jobTitle}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="inktonerType"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Type"
-                        value={contactData.inktonerType}
-                        onChange={(event) => {
-                          handleInputChange("inktonerType", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.inktonerType)}
-                        helperText={validationErrors.inktonerType}
-                      />
-                    </Grid>
-                                    
-                  </Grid>
-                </Grid>
-
-              </Grid>
-            </Box>
-          </TabPanel>
-
-          
-          <TabPanel value="2">
-            <Box flexGrow={1}>
-              <Grid container spacing={3}>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider
-                    id="purchasedate"
                     
-                    dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Purchase Date" disabled="true" slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" required= "true" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Reports To</FormLabel>
 
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      id="warrenty"
-                      
-
-                      components={['DatePicker']}>
-                      <DatePicker label="Warrenty EOL" disabled="true"  slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                          
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="purchaseCost"
-                    size="small"
-                    fullWidth
-                    disabled
-                    label="Purchase Cost"
-                    value={contactData.purchaseCost}
-                    onChange={(event) => {
-                      handleInputChange("purchaseCost", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.purchaseCost)}
-                    helperText={validationErrors.purchaseCost}
-                  />
-
-                </Grid>
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="orderNumber"
-                    size="small"
-                    fullWidth
-                    disabled
-                    label="Order Number"
-                    value={contactData.orderNumber}
-                    onChange={(event) => {
-                      handleInputChange("orderNumber", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.orderNumber)}
-                    helperText={validationErrors.orderNumber}
-                  />
-
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                      <Autocomplete
+                      <TextField
+                        id="reportsto"
+                        size="small"
                         fullWidth
+                        required
                         disabled
-                        size="small"
-                        value={
-                          companies.find(
-                            (_company) =>
-                              _company.company_id === contactData.company
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("company", newValue.company_id);
-                          } else {
-                            handleInputChange("company", null);
-                          }
+                        // label="First Name"
+                        value={contactData.reportsTo}
+                        onChange={(event) => {
+                          handleInputChange("reportsTo", event.target.value);
                         }}
-                        getOptionLabel={(option) => option.company_code}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        options={companies}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            
-                            label="Billed Entity"
-                          
-                          />
-                        )}
+                        error={Boolean(validationErrors.reportsTo)}
+                        helperText={validationErrors.reportsTo}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
-                   
-                  </Grid>
-                </Grid>                
 
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={1}
-                    columns={{ xs: 4, sm: 12, md: 3.5 }}
-                  >
-                    <Grid item xs={10} sm={12} md={12}>
-                      <Autocomplete
-                      disabled
-                        value={
-                          suppliers.find(
-                            (_supplier) =>
-                              _supplier.supplier_id === contactData.supplier
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("supplier", newValue.supplier_id);
-                          } else {
-                            handleInputChange("supplier", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        lead
+      </FormLabel>
+                      <TextField
+                        id="lead"
                         size="small"
-                        options={suppliers}
-                        renderInput={(params) => (
-                          <TextField
-                           
-                            {...params}
-                            label="Supplier"
-                          />
-                        )}
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.lead}
+                        onChange={(event) => {
+                          handleInputChange("lead", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.lead)}
+                        helperText={validationErrors.lead}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        LeadSource
+      </FormLabel>
+                      <TextField
+                        id="leadsource"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.leadSource}
+                        onChange={(event) => {
+                          handleInputChange("leadSource", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.leadSource)}
+                        helperText={validationErrors.leadSource}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                      <Typography variant="h5">Address & Detail</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}></Grid>
+
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>City</FormLabel>
+
+                      <TextField
+                        id="city"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Source"
+                        value={contactData.city}
+                        onChange={(event) => {
+                          handleInputChange("city", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.city)}
+                        helperText={validationErrors.city}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>State/Region</FormLabel>
+
+                      <TextField
+                        id="state"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Contact Type"
+                        value={contactData.state}
+                        onChange={(event) => {
+                          handleInputChange("state", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.state)}
+                        helperText={validationErrors.state}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Postal Code</FormLabel>
+
+                      <TextField
+                        id="postalcode"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Middle Name"
+                        value={contactData.postalCode}
+                        onChange={(event) => {
+                          handleInputChange("postalCode", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.postalCode)}
+                        helperText={validationErrors.postalCode}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Country
+      </FormLabel>
+                      <TextField
+                        id="country"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.country}
+                        onChange={(event) => {
+                          handleInputChange("country", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.country)}
+                        helperText={validationErrors.country}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                 
+                  <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        fax
+      </FormLabel>
+                      <TextField
+                        id="fax"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.fax}
+                        onChange={(event) => {
+                          handleInputChange("fax", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.fax)}
+                        helperText={validationErrors.fax}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Address
+      </FormLabel>
+                      <TextField
+                        id="Address"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={contactData.address}
+                        onChange={(event) => {
+                          handleInputChange("address", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.address)}
+                        helperText={validationErrors.address}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={12} md={12}>
+  <FormLabel 
+    component="legend" 
+    sx={{ 
+      color: '#525252', // Set the color of the label here
+      // Add more styling as needed
+    }}
+  >
+    Description
+  </FormLabel>
+  <TextField
+    id="description"
+    multiline  // Add this to enable multiline input
+    rows={4}   // Adjust the number of rows as needed
+    fullWidth
+    required
+    disabled
+    value={contactData.description}
+    onChange={(event) => {
+      handleInputChange("description", event.target.value);
+    }}
+    error={Boolean(validationErrors.description)}
+    helperText={validationErrors.description}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    // Apply styles to the input field itself
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+</Grid>
+
+                    
                   
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={1}
-                    columns={{ xs: 4, sm: 12, md: 3.5 }}
-                  >
-                    <Grid item xs={10} sm={12} md={12}>
-                      <Autocomplete
-                     disabled
-                        value={
-                          locations.find(
-                            (_location) =>
-                              _location.location_id === contactData.location
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("location", newValue.location_id);
-                          } else {
-                            handleInputChange("location", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        size="small"
-                        options={locations}
-                        renderInput={(params) => (
-                          <TextField
-                           
-                            {...params}
-                            label="Location"
-                          />
-                        )}
-                      />
-                    </Grid>
-                  
-                  </Grid>
-                </Grid>
-                
-                <Grid item xs={4} sm={12} md={12}>
-                        <Grid
-                          container
-                          spacing={1}
-                          columns={{ xs: 4, sm: 12, md: 3.5}}
-                        >
-                          <Grid item xs={10} sm={12} md={12}>
-                            <Autocomplete
-                            disabled
-                              value={
-                                assetstatus.find(
-                                  (_assetStatus) =>
-                                    _assetStatus.status_id === contactData.contactstatus
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("contactstatus", newValue.status_id);
-                                } else {
-                                  handleInputChange("contactstatus", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.status_name}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={assetstatus}
-                              renderInput={(params) => (
-                                <TextField
-                                
-                                  {...params}
-                                  label="Status"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          
-                        </Grid>
-                      </Grid>
-
               </Grid>
-
             </Box>
-
+            </Container>
           </TabPanel>
-          
-          <TabPanel value="3">
-          <Box flexGrow={1}>
-      <Grid container columnSpacing={3} justifyContent="center">
-        <Grid item>
-          <QRCode id="qr-code" value={`http://localhost:3000/contact_detail/${contactId}`} />
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => downloadQR(contactData.contact)}>Download QR</Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={()=>printQR(contactData.contact)}>Print QR</Button>
-        </Grid>
-      </Grid>
-    </Box>
-            {/* <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                
-              <QRCode value={`http://localhost:3000/contact_detail/${contactId}`}/>
-              </Grid>
-            </Box> */}
-          </TabPanel>
-          
+          <Divider sx={{ borderStyle: "dashed" }} />
+         
         </TabContext>
 
       </Dialog>

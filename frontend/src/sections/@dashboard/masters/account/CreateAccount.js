@@ -155,7 +155,7 @@ export default function CreateAccount(props) {
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="New Account" value="1" sx={{ fontSize: '18.92px', }}  />
+            <Tab label="New Customer" value="1" sx={{ fontSize: '18.92px', }}  />
 
             <Box flexGrow={1} >
             <DialogActions>
@@ -218,7 +218,6 @@ export default function CreateAccount(props) {
                         id="au"
                         size="small"
                         fullWidth
-                        required
                         // label="Job Title"
                         value={accountData.assignedUser}
                         onChange={(event) => {

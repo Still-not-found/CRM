@@ -110,6 +110,7 @@ console.log(opportunities_id);
         const {
           id,
           opportunities_id,
+          name,
           user_id,
           lead_id,
         description,
@@ -130,6 +131,7 @@ console.log(opportunities_id);
           {
             id,
           opportunities_id,
+          name,
           lead_id,
           user_id,
         description,

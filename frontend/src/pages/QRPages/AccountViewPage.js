@@ -15,6 +15,8 @@ import {
   TextField,
   Typography,
   styled,
+  Container,
+  FormLabel,
   Autocomplete,
   Tooltip
 } from "@mui/material";
@@ -60,23 +62,29 @@ const {accountId}= useParams();
   const { handleTabChange, userData } = props;
   const [tabValue, setTabValue] = useState("1");
   const [accountData, setAccountData] = useState({
-    account: "",
-    assignedQty: "",
-     location: "", 
-     company:"", 
-     orderNumber:"", 
-     purchaseDate:"",
-      purchaseCost:"", 
-      serialNo: "", 
-      modelNo: "", 
-      manufacturer: "", 
-      department: "", 
-      supplier: "", 
-      ipAddress: "", 
-      macAddress: "", 
-      networkName: "", 
-      accountstatus: "", 
-      inktonerType: "", 
+    accName: "",
+    industry: "",
+    email: "",
+    annualRevenue: "",
+    website: "",
+    phone: "",
+    type: "",
+    panNumber: "",
+    gstNumber: "",
+    assignedUser: "",
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+    shippingStreet: "",
+    shippingCity: "",
+    shippingCountry: "",
+    shippingState: "",
+    shippingPincode: "",
+    description: "",
+    assignedUser: "",
+    createdBy: "",
   });
   // const [blobUrl, setBlobUrl]=useState('');
 
@@ -136,42 +144,30 @@ const {accountId}= useParams();
       try {
         await axios.get(`${API_URL}/api/accounts/${accountId}`).then((response) => {
           if (response.data.status) {
-            const { account_name,
-              assigned_qty,
-              location,
-              company,
-              order_number,
-              purchase_cost,
-              serial_no,
-              model_no,
-              manufacturer,
-              department,
-              supplier,
-              ip_address,
-              mac_address,
-              network_name,
-              status_id,
-              inktoner_type,} = response.data.results[0];
+            const { name, shipping_city, shipping_street, shipping_country, shipping_state, shipping_pincode, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by } = response.data.results[0];
             setAccountData({
-              account: account_name,
-              assignedQty: assigned_qty,
-              location: location,
-              company: company,
-              location: location,
-              company: company,
-              orderNumber: order_number,
-              purchaseCost: purchase_cost,
-              serialNo: serial_no,
-              modelNo: model_no,
-              manufacturer: manufacturer,
-              department: department,
-              supplier: supplier,
-              ipAddress: ip_address,
-              macAddress: mac_address,
-              networkName: network_name,
-              accountstatus: status_id,
-              inktonerType: inktoner_type,
-
+              accName: name,
+              shippingStreet: shipping_street,
+              shippingCity: shipping_city,
+              shippingCountry: shipping_country,
+              shippingPincode: shipping_pincode,
+              shippingState: shipping_state,
+              description: description,
+    industry: industry,
+    email: email,
+    annualRevenue: annual_revenue,
+    website: website,
+    phone: phone,
+    type: type,
+    panNumber: pan_number,
+    gstNumber: gst_number,
+    assignedUser: assigned_user_id,
+    street: street,
+   city: city,
+    state: state,
+    postalCode: postal_code,
+    country: country,
+              // warrenty: dayjs(warrenty),
             });
           }
         }).catch((error) => {
@@ -257,8 +253,8 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
   const validate = () => {
     let errors = {};
 
-    if (!Boolean(accountData.accountName))
-      errors.accountName = "Account Name is required";
+    if (!Boolean(accountData.accName))
+      errors.accName = "Account Name is required";
 
 
     return errors;
@@ -267,19 +263,19 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
   return (
     <>
       <Helmet>
-        <title>Account View | IT Asset Management</title>
+        <title>Account View | CRM</title>
       </Helmet>
 
       <Dialog
         fullWidth
-        maxWidth="md"
+        maxWidth="xl"
         open={true}
         TransitionComponent={Transition}
         keepMounted
         // onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{accountData.accountName}</DialogTitle>
+        <DialogTitle>{accountData.accName}</DialogTitle>
        
         <Button variant="contained" color="error" onClick={handleClose} sx={{
           position: 'absolute',
@@ -295,461 +291,740 @@ pdf.addImage(imgData, 'PNG', qrX, qrY, qrWidth, qrHeight);
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="Account" value="1" />
-            <Tab label="Order Related Info" value="2" />
-            <Tab label="Asset QR" value="3" />
+            <Tab label="" value="1" sx={{ fontSize: '18.92px', }}  />
+
           </TabList>
-          <Divider sx={{ borderStyle: "dashed" }} />
+          
+          <Divider sx={{ borderStyle: "fill" }} />
           <TabPanel value="1">
-
-            <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={{ xs: 1, md: 3 }}
-                    columns={{ xs: 12, md: 7 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-
+          <Container maxWidth="l">
+            <Box flexGrow={2}>
+              <Grid container spacing={2}>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel  required= "true" component="legend" sx={{ color: '#525252',}}>Name</FormLabel>
                       <TextField
                         id="account_name"
                         size="small"
                         fullWidth
                         required
                         disabled
-                        label="Account Name"
-                        value={accountData.account}
+                        // label="Series"
+                        value={accountData.accName}
                         onChange={(event) => {
-                          handleInputChange("account", event.target.value);
+                          handleInputChange("accName", event.target.value);
                         }}
-                        error={Boolean(validationErrors.account)}
-                        helperText={validationErrors.account}
+                        error={Boolean(validationErrors.accName)}
+                        helperText={validationErrors.accName}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
 
-                    {/* <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="assignedqty"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Qty"
-                        value={accountData.assignedQty}
-                        onChange={(event) => {
-                          handleInputChange("assignedQty", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.assignedQty)}
-                        helperText={validationErrors.assignedQty}
-                      />
-                    </Grid> */}
-                   
-              
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Assigned User</FormLabel>
 
-                    <Grid item xs={4} sm={12} md={12}>
                       <TextField
-                        id="serialno"
+                        id="au"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="Serial No"
-                        value={accountData.serialNo}
+                        // label="Job Title"
+                        value={accountData.assignedUser}
                         onChange={(event) => {
-                          handleInputChange("serialNo", event.target.value);
+                          handleInputChange("assignedUser", event.target.value);
                         }}
-                        error={Boolean(validationErrors.serialNo)}
-                        helperText={validationErrors.serialNo}
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="model"
-                        size="small"
-                        fullWidth
-                        
-                        disabled
-                        label="Model"
-                        value={accountData.modelNo}
-                        onChange={(event) => {
-                          handleInputChange("modelNo", event.target.value);
+                        error={Boolean(validationErrors.assignedUser)}
+                        helperText={validationErrors.assignedUser}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
                         }}
-                        error={Boolean(validationErrors.modelNo)}
-                        helperText={validationErrors.modelNo}
-                      />
-                    </Grid>
-                  
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="ipaddress"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="IP Address"
-                        value={accountData.ipAddress}
-                        onChange={(event) => {
-                          handleInputChange("ipAddress", event.target.value);
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
                         }}
-                        error={Boolean(validationErrors.ipAddress)}
-                        helperText={validationErrors.ipAddress}
-                      />
-                    </Grid>
-             
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="manufacturer"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Manufacturer"
-                        value={accountData.manufacturer}
-                        onChange={(event) => {
-                          handleInputChange("manufacturer", event.target.value);
-                        }}
-
-                      />
-                    </Grid>
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="department"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Department"
-                        value={accountData.department}
-                        onChange={(event) => {
-                          handleInputChange("department", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.department)}
-                        helperText={validationErrors.department}
                       />
                     </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={4} md={6}>      
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Email</FormLabel>
                       <TextField
-                        id="macAddress"
+                        id="email"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="MAC Address"
-                        value={accountData.macAddress}
+                        // label="Account Owner"
+                        value={accountData.email}
                         onChange={(event) => {
-                          handleInputChange("macAddress", event.target.value);
+                          handleInputChange("email", event.target.value);
                         }}
-                        error={Boolean(validationErrors.macAddress)}
-                        helperText={validationErrors.macAddress}
+                        error={Boolean(validationErrors.email)}
+                        helperText={validationErrors.email}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Phone</FormLabel>
+
+                      <TextField
+                        id="phone"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Salutation"
+                        value={accountData.phone}
+                        onChange={(event) => {
+                          handleInputChange("phone", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.phone)}
+                        helperText={validationErrors.phone}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>GSTIN</FormLabel>
+
+                      <TextField
+                        id="gstin"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Gender"
+                        value={accountData.gstNumber}
+                        onChange={(event) => {
+                          handleInputChange("gstNumber", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.gstNumber)}
+                        helperText={validationErrors.gstNumber}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
 
-                    <Grid item xs={4} sm={12} md={12}>
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>PAN Number</FormLabel>
+
                       <TextField
-                        id="networkName"
+                        id="pannumber"
                         size="small"
                         fullWidth
+                        required
                         disabled
-                        label="Network"
-                        value={accountData.networkName}
+                        // label="Status"
+                        value={accountData.panNumber}
                         onChange={(event) => {
-                          handleInputChange("networkName", event.target.value);
+                          handleInputChange("panNumber", event.target.value);
                         }}
-                        error={Boolean(validationErrors.networkName)}
-                        helperText={validationErrors.networkName}
+                        error={Boolean(validationErrors.panNumber)}
+                        helperText={validationErrors.panNumber}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
                       />
                     </Grid>
-
-                    <Grid item xs={4} sm={12} md={12}>
-                      <TextField
-                        id="inktonerType"
-                        size="small"
-                        fullWidth
-                        disabled
-                        label="Type"
-                        value={accountData.inktonerType}
-                        onChange={(event) => {
-                          handleInputChange("inktonerType", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.inktonerType)}
-                        helperText={validationErrors.inktonerType}
-                      />
-                    </Grid>
-                                    
-                  </Grid>
-                </Grid>
-
-              </Grid>
-            </Box>
-          </TabPanel>
-
-          
-          <TabPanel value="2">
-            <Box flexGrow={1}>
-              <Grid container spacing={3}>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider
-                    id="purchasedate"
+                    <Grid item xs={12} sm={4} md={6}></Grid>
+                    <Grid item xs={12} sm={4} md={6}></Grid>
                     
-                    dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Purchase Date" disabled="true" slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      id="warrenty"
-                      
-
-                      components={['DatePicker']}>
-                      <DatePicker label="Warrenty EOL" disabled="true"  slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small"
-                          
-                        }
-                      }} />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="purchaseCost"
-                    size="small"
-                    fullWidth
-                    disabled
-                    label="Purchase Cost"
-                    value={accountData.purchaseCost}
-                    onChange={(event) => {
-                      handleInputChange("purchaseCost", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.purchaseCost)}
-                    helperText={validationErrors.purchaseCost}
-                  />
-
-                </Grid>
-                <Grid item xs={4} sm={12} md={12}>
-                  <TextField
-                    id="orderNumber"
-                    size="small"
-                    fullWidth
-                    disabled
-                    label="Order Number"
-                    value={accountData.orderNumber}
-                    onChange={(event) => {
-                      handleInputChange("orderNumber", event.target.value);
-                    }}
-                    error={Boolean(validationErrors.orderNumber)}
-                    helperText={validationErrors.orderNumber}
-                  />
-
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    columnspacing={2}
-                    columns={{ xs: 4, sm: 12, md: 12 }}
-                  >
-                    <Grid item xs={4} sm={12} md={12}>
-                      <Autocomplete
-                        fullWidth
-                        disabled
-                        size="small"
-                        value={
-                          companies.find(
-                            (_company) =>
-                              _company.company_id === accountData.company
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("company", newValue.company_id);
-                          } else {
-                            handleInputChange("company", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.company_code}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        options={companies}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            
-                            label="Billed Entity"
-                          
-                          />
-                        )}
-                      />
-                    </Grid>
-                   
-                  </Grid>
-                </Grid>                
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={1}
-                    columns={{ xs: 4, sm: 12, md: 3.5 }}
-                  >
-                    <Grid item xs={10} sm={12} md={12}>
-                      <Autocomplete
-                      disabled
-                        value={
-                          suppliers.find(
-                            (_supplier) =>
-                              _supplier.supplier_id === accountData.supplier
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("supplier", newValue.supplier_id);
-                          } else {
-                            handleInputChange("supplier", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        size="small"
-                        options={suppliers}
-                        renderInput={(params) => (
-                          <TextField
-                           
-                            {...params}
-                            label="Supplier"
-                          />
-                        )}
-                      />
-                    </Grid>
-                  
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={4} sm={12} md={12}>
-                  <Grid
-                    container
-                    spacing={1}
-                    columns={{ xs: 4, sm: 12, md: 3.5 }}
-                  >
-                    <Grid item xs={10} sm={12} md={12}>
-                      <Autocomplete
-                     disabled
-                        value={
-                          locations.find(
-                            (_location) =>
-                              _location.location_id === accountData.location
-                          ) || null
-                        }
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            handleInputChange("location", newValue.location_id);
-                          } else {
-                            handleInputChange("location", null);
-                          }
-                        }}
-                        getOptionLabel={(option) => option.name}
-                        id={"combo-box-city"}
-                        isOptionEqualToValue={(option, value) =>
-                          option.id === value.id
-                        }
-                        size="small"
-                        options={locations}
-                        renderInput={(params) => (
-                          <TextField
-                           
-                            {...params}
-                            label="Location"
-                          />
-                        )}
-                      />
-                    </Grid>
-                  
-                  </Grid>
-                </Grid>
-                
-                <Grid item xs={4} sm={12} md={12}>
-                        <Grid
-                          container
-                          spacing={1}
-                          columns={{ xs: 4, sm: 12, md: 3.5}}
-                        >
-                          <Grid item xs={10} sm={12} md={12}>
-                            <Autocomplete
-                            disabled
-                              value={
-                                assetstatus.find(
-                                  (_assetStatus) =>
-                                    _assetStatus.status_id === accountData.accountstatus
-                                ) || null
-                              }
-                              onChange={(event, newValue) => {
-                                if (newValue) {
-                                  handleInputChange("accountstatus", newValue.status_id);
-                                } else {
-                                  handleInputChange("accountstatus", null);
-                                }
-                              }}
-                              getOptionLabel={(option) => option.status_name}
-                              id={"combo-box-city"}
-                              isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
-                              }
-                              size="small"
-                              options={assetstatus}
-                              renderInput={(params) => (
-                                <TextField
-                                
-                                  {...params}
-                                  label="Status"
-                                />
-                              )}
-                            />
-                          </Grid>
-                          
-                        </Grid>
+                    <Grid item xs={12} sm={4} md={6}>
+                      <Typography variant="h6">Billing Address</Typography>
+                      </Grid>
+      
+                      <Grid item xs={12} sm={4} md={6}>
+                      <Typography variant="h6">Shipping Address</Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={4} md={6}>
+                      <Typography></Typography>
                       </Grid>
 
-              </Grid>
+                      <Grid item xs={12} sm={4} md={6}>
+                      <Typography></Typography>
+                      </Grid>
 
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend"  sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Street</FormLabel>
+
+                      <TextField
+                        id="street"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="First Name"
+                        value={accountData.street}
+                        onChange={(event) => {
+                          handleInputChange("street", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.street)}
+                        helperText={validationErrors.street}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    
+                    <FormLabel component="legend"  sx={{ 
+          color: '#525252', 
+        }}>Street</FormLabel>
+                      <TextField
+                        id="shippingstreet"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="First Name"
+                        value={accountData.shippingStreet}
+                        onChange={(event) => {
+                          handleInputChange("shippingStreet", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingStreet)}
+                        helperText={validationErrors.shippingStreet}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>City</FormLabel>
+
+                      <TextField
+                        id="city"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Source"
+                        value={accountData.city}
+                        onChange={(event) => {
+                          handleInputChange("city", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.city)}
+                        helperText={validationErrors.city}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>City</FormLabel>
+
+                      <TextField
+                        id="shippingcity"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Source"
+                        value={accountData.shippingCity}
+                        onChange={(event) => {
+                          handleInputChange("shippingCity", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingCity)}
+                        helperText={validationErrors.shippingCity}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>State/Region</FormLabel>
+
+                      <TextField
+                        id="state"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Account Type"
+                        value={accountData.state}
+                        onChange={(event) => {
+                          handleInputChange("state", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.state)}
+                        helperText={validationErrors.state}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>State/Region</FormLabel>
+
+                      <TextField
+                        id="shippingstate"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Account Type"
+                        value={accountData.shippingState}
+                        onChange={(event) => {
+                          handleInputChange("shippingState", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingState)}
+                        helperText={validationErrors.shippingState}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Postal Code</FormLabel>
+
+                      <TextField
+                        id="postalcode"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Middle Name"
+                        value={accountData.postalCode}
+                        onChange={(event) => {
+                          handleInputChange("postalCode", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.postalCode)}
+                        helperText={validationErrors.postalCode}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    
+                    <FormLabel component="legend" sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}>Postal Code</FormLabel>
+
+                      <TextField
+                        id="spostalcode"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Middle Name"
+                        value={accountData.shippingPincode}
+                        onChange={(event) => {
+                          handleInputChange("shippingPincode", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingPincode)}
+                        helperText={validationErrors.shippingPincode}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Country
+      </FormLabel>
+                      <TextField
+                        id="country"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={accountData.country}
+                        onChange={(event) => {
+                          handleInputChange("country", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.country)}
+                        helperText={validationErrors.country}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={6}>
+                    <FormLabel 
+        component="legend" 
+        sx={{ 
+          color: '#525252', // Set the color of the label here
+          // Add more styling as needed
+        }}
+      >
+        Country
+      </FormLabel>
+                      <TextField
+                        id="scountry"
+                        size="small"
+                        fullWidth
+                        required
+                        disabled
+                        // label="Request Type"
+                        value={accountData.shippingCountry}
+                        onChange={(event) => {
+                          handleInputChange("shippingCountry", event.target.value);
+                        }}
+                        error={Boolean(validationErrors.shippingCountry)}
+                        helperText={validationErrors.shippingCountry}
+                        InputProps={{
+                          style: {
+                            backgroundColor: '#f3f3f3', // Set the background color here
+                          },
+                        }}
+                        // Apply styles to the input field itself
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#f3f3f3', // Optional: change the border color
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'primary.main', // Optional: change the border color when focused
+                            },
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={12} md={12}>
+  <FormLabel 
+    component="legend" 
+    sx={{ 
+      color: '#525252', // Set the color of the label here
+      // Add more styling as needed
+    }}
+  >
+    Description
+  </FormLabel>
+  <TextField
+    id="description"
+    multiline  // Add this to enable multiline input
+    rows={4}   // Adjust the number of rows as needed
+    fullWidth
+    required
+    disabled
+    value={accountData.description}
+    onChange={(event) => {
+      handleInputChange("description", event.target.value);
+    }}
+    error={Boolean(validationErrors.description)}
+    helperText={validationErrors.description}
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    // Apply styles to the input field itself
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+  />
+                    </Grid>        
+              </Grid>
             </Box>
-
+            </Container>
           </TabPanel>
-          
-          <TabPanel value="3">
-          <Box flexGrow={1}>
-      <Grid container columnSpacing={3} justifyContent="center">
-        <Grid item>
-          <QRCode id="qr-code" value={`http://localhost:3000/account_detail/${accountId}`} />
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={() => downloadQR(accountData.account)}>Download QR</Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={()=>printQR(accountData.account)}>Print QR</Button>
-        </Grid>
-      </Grid>
-    </Box>
-            {/* <Box flexGrow={1}>
-              <Grid container columnSpacing={3}>
-                
-              <QRCode value={`http://localhost:3000/account_detail/${accountId}`}/>
-              </Grid>
-            </Box> */}
-          </TabPanel>
-          
+          <Divider sx={{ borderStyle: "dashed" }} />
+         
         </TabContext>
 
       </Dialog>

@@ -65,6 +65,7 @@ export default function CreateContact(props) {
   const [contactData, setContactData] = useState({
     contactName: "",
     CStatus: null,
+    email: null,
         // phone: null,
         city: null,
         state: null,
@@ -497,19 +498,19 @@ export default function CreateContact(props) {
           // Add more styling as needed
         }}
       >
-        Office Phone
+        Email
       </FormLabel>
                       <TextField
-                        id="office phone"
+                        id="email"
                         size="small"
                         fullWidth
                         // label="Request Type"
-                        value={contactData.officePhone}
+                        value={contactData.email}
                         onChange={(event) => {
-                          handleInputChange("officePhone", event.target.value);
+                          handleInputChange("email", event.target.value);
                         }}
-                        error={Boolean(validationErrors.officePhone)}
-                        helperText={validationErrors.officePhone}
+                        error={Boolean(validationErrors.email)}
+                        helperText={validationErrors.email}
                         InputProps={{
                           style: {
                             backgroundColor: '#f3f3f3', // Set the background color here

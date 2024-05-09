@@ -20,7 +20,7 @@ import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
 
 const TABLE_HEAD = [
-  { id: "name", label: "Account Name", alignRight: false },
+  { id: "name", label: "Customer Name", alignRight: false },
   { id: "phone", label: "Contact No", alignRight: false },
   { id: "gst_number", label: "GSTIN", alignRight: false },
   { id: "pan_number", label: "PAN No", alignRight: false },
@@ -204,7 +204,7 @@ const isNotFound = !filteredAccounts.length && !!filterName;
     Masters
   </Link>,
   <Typography key="3" color='text.disabled'>
-      Accounts
+      Customers
       </Typography>,
     <Typography key="4" color='text.disabled'>
       List
@@ -215,13 +215,13 @@ const isNotFound = !filteredAccounts.length && !!filterName;
         <>
 
       <Helmet>
-        <title> Account List | IT Asset Management </title>
+        <title> Customer List | CRM </title>
       </Helmet>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={4}>
           <Box>
             <Typography variant="h4" gutterBottom>
-             Accounts&nbsp;List
+             Customers&nbsp;List
             </Typography>
             <Breadcrumbs
               separator={<NavigateNextIcon fontSize="small" />}
@@ -235,9 +235,8 @@ const isNotFound = !filteredAccounts.length && !!filterName;
             variant="contained"
             startIcon={<AddIcon fontSize="large" />}
             onClick={handleClickCreate}
-            
           >
-            New&nbsp;Account
+            New&nbsp;Customer
           </Button>
         </Stack>
 

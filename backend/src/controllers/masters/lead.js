@@ -42,7 +42,7 @@ const leadController = {
       const { files } = req;
 
       console.log(req.body);
-      const { leadName, shippingCity,shippingState,shippingCountry,shippingPincode, description, leadStatus, source, interestLevel, firstName, lastName, officePhone, jobTitle, mobile, fax, department, accountName, email, leadSource, statusDescription, opportunityAmount, leadSourceDescription, referredBy, assignedTo, address, city, state, postalCode, country, shippingAddress, modifiedBy, createdBy } = req.body;
+      const { leadName, gender, salutation, series, leadType, requestType, shippingCity,shippingState,shippingCountry,shippingPincode, description, leadStatus, source, interestLevel, firstName, lastName, officePhone, jobTitle, mobile, fax, department, accountName, email, leadSource, statusDescription, opportunityAmount, leadSourceDescription, referredBy, assignedTo, address, city, state, postalCode, country, shippingAddress, modifiedBy, createdBy } = req.body;
       const leadData = {
         title: leadName,
         shipping_city: shippingCity,
@@ -74,9 +74,13 @@ const leadController = {
         postal_code: postalCode,
         country: country,
         shipping_address: shippingAddress,
+        gender: gender,
+        series: series,
+        lead_type: leadType,
+        request_type: requestType,
+        salutation: salutation,
         created_by: createdBy,
-        modified_by: createdBy,
-        
+        modified_by: createdBy, 
       }
       // console.log(leadData);
       const result = await LeadModel.createLead(leadData);
@@ -151,7 +155,12 @@ const leadController = {
         shipping_city,
         shipping_country,
         shipping_state,
-        shipping_pincode
+        shipping_pincode,
+        gender,
+        series,
+        lead_type,
+        request_type,
+        salutation
 
         } = rows[0];
 
@@ -161,7 +170,6 @@ const leadController = {
             lead_id,
             title,
             lead_status,
-            
         description,
         source,
         interest_level,
@@ -188,7 +196,12 @@ const leadController = {
         shipping_city,
         shipping_country,
         shipping_state,
-        shipping_pincode,   
+        shipping_pincode, 
+        gender,
+        series,
+        lead_type,
+        request_type,
+        salutation  
           }
         ];
 
@@ -211,7 +224,7 @@ const leadController = {
       // Access uploaded files
       const { files } = req;
 
-      const { leadName, shippingCity,shippingState,shippingCountry,shippingPincode, description, leadStatus, source, interestLevel, firstName, lastName, officePhone, jobTitle, mobile, fax, department, accountName, email, leadSource, statusDescription, opportunityAmount, leadSourceDescription, referredBy, assignedTo, address, city, state, postalCode, country, shippingAddress, modifiedBy, createdBy } = req.body;
+      const { leadName, gender, salutation, series, leadType, requestType, shippingCity,shippingState,shippingCountry,shippingPincode, description, leadStatus, source, interestLevel, firstName, lastName, officePhone, jobTitle, mobile, fax, department, accountName, email, leadSource, statusDescription, opportunityAmount, leadSourceDescription, referredBy, assignedTo, address, city, state, postalCode, country, shippingAddress, modifiedBy, createdBy } = req.body;
       const leadData = {
         title: leadName,
         shipping_city: shippingCity,
@@ -244,6 +257,11 @@ const leadController = {
         country: country,
         shipping_address: shippingAddress,
         modified_by: modifiedBy,
+        gender: gender,
+        series: series,
+        lead_type: leadType,
+        request_type: requestType,
+        salutation: salutation,
         // invoice: invoice,
         // po: po,
       }

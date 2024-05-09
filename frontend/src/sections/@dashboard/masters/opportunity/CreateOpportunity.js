@@ -13,10 +13,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import Slide from "@mui/material/Slide";
 import Tab from "@mui/material/Tab";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 // @mui-icons ------------------------------------------------
 // Components -----------------------------------------------
 import axios from "axios";
+import dayjs from "dayjs";
 import { Helmet } from "react-helmet-async";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -444,47 +450,55 @@ export default function CreateOpportunity(props) {
                       />
                     </Grid>
 
-
-
                     <Grid item xs={12} sm={6} md={6}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Expected Close Date</FormLabel>
+  <FormLabel component="legend" sx={{ 
+    color: '#525252', // Set the color of the label here
+    // Add more styling as needed
+  }}>Expected Close Date</FormLabel>
+  <LocalizationProvider
+    id="expectedcloseddate"
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+    dateAdapter={AdapterDayjs}>
+    <DemoContainer components={['DatePicker']}>
+      <DatePicker
+        format="DD/MM/YYYY"
+        // label="Purchase Date" 
+        onChange={(newValue) =>
+          handleInputChange(
+            "expectedCloseDate",
+            dayjs(newValue.$d).format("YYYY-MM-DD")
+          )
+        }
+       
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            size: "small"
+          }
+        }}
+      />
+    </DemoContainer>
+  </LocalizationProvider>
+</Grid>
 
-                      <TextField
-                        id="ecd"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Salutation"
-                        value={opportunityData.expectedCloseDate}
-                        onChange={(event) => {
-                          handleInputChange("expectedCloseDate", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.expectedCloseDate)}
-                        helperText={validationErrors.expectedCloseDate}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
+
                     <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here

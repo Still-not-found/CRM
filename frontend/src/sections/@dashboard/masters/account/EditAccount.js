@@ -178,9 +178,10 @@ export default function EditAccount(props) {
       try {
         await axios.get(`${API_URL}/api/accounts/${idToEdit}`).then((response) => {
           if (response.data.status) {
-            const { name, shipping_city, shipping_country, shipping_state, shipping_pincode, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by } = response.data.results[0];
+            const { name, shipping_city, shipping_street, shipping_country, shipping_state, shipping_pincode, description, industry, annual_revenue, phone, website, type, assigned_user_id, pan_number, gst_number, email, street, city, state, postal_code, country, office_phone, created_by } = response.data.results[0];
             setAccountData({
               accName: name,
+              shippingStreet: shipping_street,
               shippingCity: shipping_city,
               shippingCountry: shipping_country,
               shippingPincode: shipping_pincode,
@@ -241,8 +242,8 @@ export default function EditAccount(props) {
   const validate = () => {
     let errors = {};
 
-    if (!Boolean(accountData.accountName))
-      errors.accountName = "Account Name is required";
+    if (!Boolean(accountData.accName))
+      errors.accName = "Account Name is required";
 
 
     return errors;
@@ -261,7 +262,7 @@ export default function EditAccount(props) {
       return;
     }
     try {
-      await axios.put(`${API_URL}/api/accounts/${idToEdit}`, { ...accountData, modifiedBy: loggedUser.id }).then((response) => {
+      await axios.put(`${API_URL}/api/accounts/${idToEdit}`, { ...accountData, modifiedBy: loggedUser.user_id }).then((response) => {
         console.log(response);
         setStatus({
           open: true,
@@ -308,7 +309,7 @@ export default function EditAccount(props) {
             aria-label="lab API tabs example"
             sx={{ borderRadius: "10px 10px 0px 0px" }}
           >
-            <Tab label="New Account" value="1" sx={{ fontSize: '18.92px', }}  />
+            <Tab label="" value="1" sx={{ fontSize: '18.92px', }}  />
 
             {/* <Box flexGrow={1} >
             <DialogActions>

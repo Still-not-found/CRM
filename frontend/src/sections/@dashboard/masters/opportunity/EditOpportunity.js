@@ -29,9 +29,10 @@
             import Slide from "@mui/material/Slide";
             import Tab from "@mui/material/Tab";
             import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-            import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-            import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-            import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
             
             // @mui-icons ------------------------------------------------
             import AddIcon from "@mui/icons-material/Add";
@@ -168,12 +169,12 @@
                         const { opportunities_id, lead_id, user_id, name, description, value, stage, probability, expected_close_date, account_id, opportunity_amount, type, lead_source, sales_stage, assigned_to, updated_by, created_by } = response.data.results[0];
                         setOpportunityData({
                        Name: name,
-                       lead:lead_id,
+                       lead: lead_id,
                        description: description,
                        value: value,
-                       stage:stage,
+                       stage: stage,
                        probability: probability,
-                       expectedCloseDate: expected_close_date,
+                       expectedCloseDate: dayjs(expected_close_date),
                        account: account_id,
                        opportunityAmount: opportunity_amount,
                        type: type,
@@ -222,9 +223,7 @@
                 let errors = {};
             
                 if (!Boolean(opportunityData.Name))
-                  errors.opportunityName = "Opportunity Name is required";
-            
-            
+                  errors.Name = "Opportunity Name is required";
                 return errors;
               }
             
@@ -500,47 +499,54 @@
                       />
                     </Grid>
 
-
-
                     <Grid item xs={12} sm={6} md={6}>
-                    <FormLabel component="legend" sx={{ 
-          color: '#525252', // Set the color of the label here
-          // Add more styling as needed
-        }}>Expected Close Date</FormLabel>
+  <FormLabel component="legend" sx={{ 
+    color: '#525252', // Set the color of the label here
+    // Add more styling as needed
+  }}>Expected Close Date</FormLabel>
+  <LocalizationProvider
+    id="expectedcloseddate"
+    InputProps={{
+      style: {
+        backgroundColor: '#f3f3f3', // Set the background color here
+      },
+    }}
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#f3f3f3', // Optional: change the border color
+        },
+        '&:hover fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color on hover
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'primary.main', // Optional: change the border color when focused
+        },
+      },
+    }}
+    dateAdapter={AdapterDayjs}>
+    <DemoContainer components={['DatePicker']}>
+      <DatePicker
+        format="DD/MM/YYYY"
+        // label="Purchase Date" 
+        onChange={(newValue) =>
+          handleInputChange(
+            "expectedCloseDate",
+            dayjs(newValue.$d).format("YYYY-MM-DD")
+          )
+        }
+       
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            size: "small"
+          }
+        }}
+      />
+    </DemoContainer>
+  </LocalizationProvider>
+</Grid>
 
-                      <TextField
-                        id="ecd"
-                        size="small"
-                        fullWidth
-                        required
-                        // label="Salutation"
-                        value={opportunityData.expectedCloseDate}
-                        onChange={(event) => {
-                          handleInputChange("expectedCloseDate", event.target.value);
-                        }}
-                        error={Boolean(validationErrors.expectedCloseDate)}
-                        helperText={validationErrors.expectedCloseDate}
-                        InputProps={{
-                          style: {
-                            backgroundColor: '#f3f3f3', // Set the background color here
-                          },
-                        }}
-                        // Apply styles to the input field itself
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                              borderColor: '#f3f3f3', // Optional: change the border color
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color on hover
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'primary.main', // Optional: change the border color when focused
-                            },
-                          },
-                        }}
-                      />
-                    </Grid>
                     <Grid item xs={12} sm={6} md={6}>
                     <FormLabel component="legend" sx={{ 
           color: '#525252', // Set the color of the label here
